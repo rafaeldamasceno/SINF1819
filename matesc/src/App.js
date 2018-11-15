@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
+import Button from './components/Button';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { authenticate } from './utils';
+import { Alert } from 'reactstrap';
+
+const AppContext = React.createContext();
+export const AppProvider = AppContext.Provider;
+export const AppConsumer = AppContext.Consumer;
 
 class App extends Component {
   constructor(props) {
@@ -7,48 +15,27 @@ class App extends Component {
 
     this.state = {
       authentication: {},
-      artigos: {}
+      items: {}
     };
-  }
 
-  loadArtigos() {
-    fetch('http://localhost:2018/WebApi/Base/Artigos/LstArtigos',
-        {
-          headers: {
-            'Authorization' : `Bearer ${this.state.authentication['access_token']}`,
-            'Accept': 'application/json'
-          }
-        })
-        .then(response => response.json())
-        .then(data => this.setState({ artigos: data }));
+    this.authPromise = null;
   }
 
   componentDidMount() {
-    let requestBody = {
-      username: 'FEUP',
-      password: 'qualquer1',
-      company: 'BELAFLOR',
-      instance: 'DEFAULT',
-      line: 'professional',
-      grant_type: 'password'
-    };
-
-    let formData = new URLSearchParams();
-    for (var key in requestBody) {
-      formData.append(key, requestBody[key]);
-    }
-    
-    fetch('http://localhost:2018/WebApi/token', {
-      method: 'POST',
-      body: formData,
-    })
+    this.authPromise = authenticate()
       .then(response => response.json())
-      .then(data => this.setState({ authentication: data }))
-      .then(this.loadArtigos.bind(this));   
+      .then(data => this.setState({ authentication: data }));
   }
 
   render() {
-    return <div>{JSON.stringify(this.state)}</div>;
+    return (
+      <AppProvider value={this}>
+        <Alert color='primary'>{ JSON.stringify(this.state) }</Alert>
+        <BrowserRouter>
+            <Route path='/button' component={ Button }/>
+        </BrowserRouter>
+      </AppProvider>    
+    )
   }
 }
 
