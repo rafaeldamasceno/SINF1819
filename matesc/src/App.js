@@ -12,6 +12,7 @@ import {
   NavLink,
 } from 'reactstrap';
 import UnprocessedOrders from './components/UnprocessedOrders';
+import OrderContent from './components/OrderContent';
 
 const AppContext = React.createContext();
 export const AppProvider = AppContext.Provider;
@@ -76,6 +77,7 @@ class App extends Component {
           test query
         </Button> */}
             <Route path='/unprocessed-orders' component={UnprocessedOrders} />
+            <Route path='/order-content' component={OrderContent} />
           </React.Fragment>
         </BrowserRouter>
       </AppProvider>
