@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
 import './App.css';
-import Button from './components/Button';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { authenticate } from './utils';
-import { Alert } from 'reactstrap';
+import {
+  Collapse,
+  Navbar,
+  NavbarBrand,
+  NavbarToggler,
+  Nav,
+  NavItem,
+  NavLink,
+} from 'reactstrap';
+import UnprocessedOrders from './components/UnprocessedOrders';
 
 const AppContext = React.createContext();
 export const AppProvider = AppContext.Provider;
@@ -19,6 +27,17 @@ class App extends Component {
     };
 
     this.authPromise = null;
+
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      isOpen: false
+    };
+  }
+
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
   }
 
   componentDidMount() {
@@ -30,12 +49,37 @@ class App extends Component {
   render() {
     return (
       <AppProvider value={this}>
-        <Alert color='primary'>{ JSON.stringify(this.state) }</Alert>
         <BrowserRouter>
-            <Route path='/button' component={ Button }/>
+          <React.Fragment>
+            <Navbar color='dark' dark fixed='top' expand='md'>
+              <NavbarBrand className='text-white'>MATESC</NavbarBrand>
+              <NavbarToggler onClick={this.toggle} />
+              <Collapse isOpen={this.state.isOpen} navbar>
+                <Nav className="mr-auto" navbar>
+                  <NavItem>
+                    <Link to='/unprocessed-orders'><NavLink>Unprocessed orders</NavLink></Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to='/warehouse'><NavLink>Warehouse</NavLink></Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to='/items'><NavLink>Items</NavLink></Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to='/clients'><NavLink>Clients</NavLink></Link>
+                  </NavItem>
+                </Nav>
+              </Collapse>
+            </Navbar>
+            {/* <Alert color='primary'>{JSON.stringify(this.state)}</Alert>
+        <Button color='primary' onClick={() => { query(this.state.authentication, 'test') }}>
+          test query
+        </Button> */}
+            <Route path='/unprocessed-orders' component={UnprocessedOrders} />
+          </React.Fragment>
         </BrowserRouter>
-      </AppProvider>    
-    )
+      </AppProvider>
+    );
   }
 }
 

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:2018/WebApi';
+export const API_URL = 'http://localhost:2018/WebApi';
 
 export function makeRequestBody(body) {
     let formData = new URLSearchParams();
@@ -36,5 +36,12 @@ export function makeHeaders(authentication) {
 export function loadItems(authentication) {
     return fetch(`${API_URL}/Base/Artigos/LstArtigos`, {
         headers: makeHeaders(authentication)
+    });
+}
+
+export function query(authentication, query) {
+    return fetch(`${API_URL}/Administrador/Consulta`, {
+        headers: makeHeaders(authentication),
+        body: `"${query}"`
     });
 }
