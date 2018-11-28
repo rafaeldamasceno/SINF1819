@@ -13,6 +13,8 @@ import {
 } from 'reactstrap';
 import UnprocessedOrders from './components/UnprocessedOrders';
 import OrderContent from './components/OrderContent';
+import PickingList from './components/PickingList';
+
 
 const AppContext = React.createContext();
 export const AppProvider = AppContext.Provider;
@@ -78,6 +80,7 @@ class App extends Component {
         </Button> */}
             <Route path='/unprocessed-orders' component={UnprocessedOrders} />
             <Route path='/order-content' component={OrderContent} />
+            <Route path='/picking-list' component={PickingList} />
           </React.Fragment>
         </BrowserRouter>
       </AppProvider>
