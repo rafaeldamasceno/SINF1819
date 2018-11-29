@@ -8,7 +8,7 @@ import {
     Button
 } from 'reactstrap';
 
-class PickingList extends Component {
+export default class PickingList extends Component {
     render() {
         return (<Container>
             <Row>
@@ -62,5 +62,3 @@ class PickingList extends Component {
         </Container>)
     }
 }
-
-export default PickingList;

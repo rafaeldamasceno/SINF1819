@@ -8,7 +8,7 @@ import {
     Button,
 } from 'reactstrap';
 
-class Warehouse extends Component {
+export default class Warehouse extends Component {
     render() {
         return (
         <Container>
@@ -87,5 +87,3 @@ class Warehouse extends Component {
         </Container>)
     }
 }
-
-export default Warehouse;

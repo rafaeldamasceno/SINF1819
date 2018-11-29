@@ -8,7 +8,7 @@ import {
     Button,
 } from 'reactstrap';
 
-class OrderContent extends Component {
+export default class OrderContent extends Component {
     render() {
         return (<Container>
 
@@ -89,5 +89,3 @@ class OrderContent extends Component {
         </Container>)
     }
 }
-
-export default OrderContent;

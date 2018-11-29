@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-class UnprocessedOrders extends Component {
+export default class UnprocessedOrders extends Component {
     render() {
         return (<Container>
             <Row>
@@ -54,5 +54,3 @@ class UnprocessedOrders extends Component {
         </Container>)
     }
 }
-
-export default UnprocessedOrders;

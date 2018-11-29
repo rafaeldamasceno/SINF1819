@@ -9,7 +9,23 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-class SupplierOrder extends Component {
+export default class SupplierOrder extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            allocation: [],
+            deviation: [],
+            ucDeviation: [],
+            options: [],
+            error: null,
+            iteration: '',
+            name: '',
+            footer: '',
+        };
+    }
+
+
     render() {
         return (<Container>
             <Row>
@@ -50,5 +66,3 @@ class SupplierOrder extends Component {
         </Container>)
     }
 }
-
-export default SupplierOrder;
