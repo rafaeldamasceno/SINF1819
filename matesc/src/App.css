@@ -1,3 +1,13 @@
 body {
   padding-top: 5rem;
 }
+
+#table-out-of-stock-items {
+  table-layout:fixed;
+  width:100%;
+}
+
+#table-out-of-stock-items td, #table-out-of-stock-items th{
+  word-wrap: break-word;
+}
+

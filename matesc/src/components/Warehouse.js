@@ -29,70 +29,61 @@ class Warehouse extends Component {
             <Table>
                 <thead>
                     <tr>
-                        <th>Order ID</th>
-                        <th>Client</th>
-                        <th>Deadline</th>
-                        <th className='text-center'>Exclude</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Quantity</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row">36272</th>
-                        <td>Bertrand NorteShopping</td>
-                        <td>21/02/2019</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
+                        <th scope="row">A003</th>
+                        <td>Pencil</td>
+                        <td>Corridor 2, Shelf 1, L</td>
+                        <td>67</td>
                     </tr>
                     <tr>
-                        <th scope="row">62378</th>
-                        <td>FNAC Braga</td>
-                        <td>12/03/2019</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
+                        <th scope="row">A004</th>
+                        <td>Calculator</td>
+                        <td>Corridor 2, Shelf 1, R</td>
+                        <td>13</td>
                     </tr>
                     <tr>
-                        <th scope="row">62153</th>
-                        <td>Papelaria Mundo</td>
-                        <td>30/01/2019</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
+                       <th scope="row">A006</th>
+                        <td>Stapler</td>
+                        <td>Corridor 3, Shelf 2, L</td>
+                        <td>53</td>
                     </tr>
                 </tbody>
             </Table>
 
             <Row>
                 <Col>
-                    <h1>Items in stock</h1>
+                    <h1>Out of stock items</h1>
                 </Col>
             </Row>
-            <Table>
+            <Table id='table-out-of-stock-items'>
                 <thead>
                     <tr>
-                        <th>Order ID</th>
-                        <th>Client</th>
-                        <th>Deadline</th>
-                        <th className='text-center'>Exclude</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Location</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row">36272</th>
-                        <td>Bertrand NorteShopping</td>
-                        <td>21/02/2019</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
+                        <th scope="row">A007</th>
+                        <td>Pen</td>
+                        <td>Corridor 5, Shelf 1, R</td>
                     </tr>
                     <tr>
-                        <th scope="row">62378</th>
-                        <td>FNAC Braga</td>
-                        <td>12/03/2019</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">62153</th>
-                        <td>Papelaria Mundo</td>
-                        <td>30/01/2019</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
+                        <th scope="row">A008</th>
+                        <td>Notebook</td>
+                        <td>Corridor 1, Shelf 1, L</td>
                     </tr>
                 </tbody>
             </Table>
-            <Button outline color='primary' size='lg' className='float-right'>Create picking wave</Button>
+            <Button outline color='primary' size='lg' className='float-right'>Order stock</Button>
         </Container>)
     }
 }
