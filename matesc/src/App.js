@@ -15,6 +15,7 @@ import UnprocessedOrders from './components/UnprocessedOrders';
 import OrderContent from './components/OrderContent';
 import PickingList from './components/PickingList';
 import Warehouse from './components/Warehouse';
+import SupplierOrder from './components/SupplierOrder';
 
 const AppContext = React.createContext();
 export const AppProvider = AppContext.Provider;
@@ -60,7 +61,10 @@ class App extends Component {
               <Collapse isOpen={this.state.isOpen} navbar>
                 <Nav className="mr-auto" navbar>
                   <NavItem>
-                    <Link to='/unprocessed-orders'><NavLink>Unprocessed orders</NavLink></Link>
+                    <Link to='/unprocessed-client-orders'><NavLink>Unprocessed client orders</NavLink></Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to='/unprocessed-supplier-orders'><NavLink>Unprocessed supplier orders</NavLink></Link>
                   </NavItem>
                   <NavItem>
                     <Link to='/warehouse'><NavLink>Warehouse</NavLink></Link>
@@ -78,7 +82,8 @@ class App extends Component {
         <Button color='primary' onClick={() => { query(this.state.authentication, 'test') }}>
           test query
         </Button> */}
-            <Route path='/unprocessed-orders' component={UnprocessedOrders} />
+            <Route path='/unprocessed-client-orders' component={UnprocessedOrders} />
+            <Route path='/unprocessed-supplier-orders' component={SupplierOrder} />
             <Route path='/order-content' component={OrderContent} />
             <Route path='/picking-list' component={PickingList} />
             <Route path='/warehouse' component={Warehouse} />
