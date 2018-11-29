@@ -6,6 +6,9 @@
   "main": "index.js",
   "author": "SINF",
   "license": "ISC",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "express": "^4.16.4"
   }
