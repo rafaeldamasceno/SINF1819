@@ -26,7 +26,7 @@ class UnprocessedOrders extends Component {
                         <th>Order ID</th>
                         <th>Client</th>
                         <th>Deadline</th>
-                        <th className='text-center'>Exclude</th>
+                        <th className='text-center'>Include</th>
                     </tr>
                 </thead>
                 <tbody>
