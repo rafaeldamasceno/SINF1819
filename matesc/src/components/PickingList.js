@@ -30,7 +30,6 @@ class PickingList extends Component {
                         <th>Product Name</th>
                         <th>Location</th>
                         <th>Quantity</th>
-                        <th className='text-center'>Picked</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,7 +39,6 @@ class PickingList extends Component {
                         <td>Binder</td>
                         <td>Corridor 1, Shelf 2, L</td>
                         <td>153</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
                     </tr>
                     <tr>
                         <th scope="row">31471</th>
@@ -48,7 +46,6 @@ class PickingList extends Component {
                         <td>Stapler</td>
                         <td>Corridor 3, Shelf 2, L</td>
                         <td>53</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
                     </tr>
                     <tr>
                         <th scope="row">12345</th>
@@ -56,13 +53,9 @@ class PickingList extends Component {
                         <td>Calculator</td>
                         <td>Corridor 2, Shelf 1, R</td>
                         <td>13</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
                     </tr>
                 </tbody>
             </Table>
-            <Row>
-                <Button outline color='primary' className='float-right ml-auto mb-2'>Check all</Button>
-            </Row>
             <Row>
                 <Button outline color='success' size='lg' className='float-right ml-auto'>Complete picking</Button>
             </Row>

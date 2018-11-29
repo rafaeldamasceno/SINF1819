@@ -26,25 +26,24 @@ class OrderContent extends Component {
                         ID:
                     </span>
                     67326
-
                 </p>
                 <p>
                     <span class='font-weight-bold mr-1'>
-                        ID:
+                        Deadline:
                     </span>
-                    67326
+                    12/01/2019
                 </p>
                 <p>
                     <span class='font-weight-bold mr-1'>
-                        ID:
+                        Client:
                     </span>
-                    67326
+                    Papelaria Mundo
                 </p>
                 <p>
                     <span class='font-weight-bold mr-1'>
-                        ID:
+                        Total:
                     </span>
-                    67326
+                    782€
                 </p>
             </div>
 
