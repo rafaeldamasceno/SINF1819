@@ -1,0 +1,15 @@
+{
+  "name": "matesc-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enables connections to a database for MATESC frontend.",
+  "main": "index.js",
+  "author": "SINF",
+  "license": "ISC",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
