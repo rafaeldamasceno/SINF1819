@@ -14,7 +14,7 @@ import {
 import UnprocessedOrders from './components/UnprocessedOrders';
 import OrderContent from './components/OrderContent';
 import PickingList from './components/PickingList';
-
+import Warehouse from './components/Warehouse';
 
 const AppContext = React.createContext();
 export const AppProvider = AppContext.Provider;
@@ -81,6 +81,7 @@ class App extends Component {
             <Route path='/unprocessed-orders' component={UnprocessedOrders} />
             <Route path='/order-content' component={OrderContent} />
             <Route path='/picking-list' component={PickingList} />
+            <Route path='/warehouse' component={Warehouse} />
           </React.Fragment>
         </BrowserRouter>
       </AppProvider>
