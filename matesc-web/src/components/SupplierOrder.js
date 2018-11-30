@@ -13,9 +13,9 @@ export default class SupplierOrder extends Component {
         this.state = {
             title: "Supplier Orders",
             tableHeaders:[{name:"Order ID"},{name:"Supplier"},{name:"Arrival Date"}],
-            tableData: [[36272,"Bertrand NorteShopping","21/02/2019"],
-            [62378,"FNAC Braga","12/03/2019"],
-            [62153,"Papelaria Mundo","30/01/2019"]],
+            tableData: [[36272,"Sociedade de fornecimento, Lda","21/02/2019"],
+            [62378,"Papalaco & Papeis","12/03/2019"],
+            [62153,"Recheio","30/01/2019"]],
         };
     }
 

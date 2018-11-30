@@ -1,56 +1,32 @@
 import React, { Component } from 'react';
 import {
     Container,
-    Row,
-    Col,
-    Input,
-    Table,
     Button
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import SearchableTableCheckbox from "./SearchableTableCheckbox";
 
 export default class UnprocessedOrders extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            title: "Client Orders",
+            headers: [{ name: "Order ID" }, { name: "Client" }, { name: "Deadline" }, { name: "Include" }],
+            data: [[36272, "Bertrand NorteShopping", "21/02/2019"],
+                [62153, "FNAC Braga", "12/03/2019"],
+                [24263, "Papelaria Alegria", "04/02/2019"]]
+        };
+    }
+
     render() {
-        return (<Container>
-            <Row>
-                <Col>
-                    <h1>Client Orders</h1>
-                </Col>
-                <Col xs='0' className='ml-auto'>
-                    <Input type='text' placeholder='Search'></Input>
-                </Col>
-            </Row>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Client</th>
-                        <th>Deadline</th>
-                        <th className='text-center'>Include</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                      <th scope="row"><Link to='/order-content'>36272</Link></th>
-                        <td>Bertrand NorteShopping</td>
-                        <td>21/02/2019</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
-                    </tr>
-                    <tr>
-                        <th scope = "row"><Link to='/order-content'>62378</Link></th>
-                        <td>FNAC Braga</td>
-                        <td>12/03/2019</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
-                    </tr>
-                    <tr>
-                        <th scope = "row"><Link to='/order-content'>62153</Link></th>
-                        <td>Papelaria Mundo</td>
-                        <td>30/01/2019</td>
-                        <td className='text-center pl-5'><Input type='checkbox'></Input></td>
-                    </tr>
-                </tbody>
-            </Table>
-            <Link to='/picking-list'><Button outline color='primary' size='lg' className='float-right'>Create picking wave</Button></Link>
-        </Container>)
+        return <Container>
+            <SearchableTableCheckbox title={this.state.title} headers={this.state.headers} data={this.state.data} link="true" />
+            <Link to="/picking-list">
+              <Button outline color="primary" size="lg" className="float-right">
+                Create picking wave
+              </Button>
+            </Link>
+          </Container>;
     }
 }
