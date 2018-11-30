@@ -26,6 +26,10 @@ export default class Warehouse extends Component {
                 tableData: [["A007", "Pen", "Corridor 5, Shelf 1, R"],
                     ["A008", "Notebook", "Corridor 1, Shelf 1, L"]]
             },
+            options:{
+                link:false,
+                search:false 
+            }
         };
     }
     render() {
@@ -40,8 +44,8 @@ export default class Warehouse extends Component {
                 </Button>
               </Col>
             </Row>
-            <SearchableTable title={this.state.tableInStock.title} headers={this.state.tableInStock.tableHeaders} data={this.state.tableInStock.tableData} link="false" search="false" />
-            <SearchableTable title={this.state.tableOutOfStock.title} headers={this.state.tableOutOfStock.tableHeaders} data={this.state.tableOutOfStock.tableData} link="false" search="false" />
+            <SearchableTable options={this.state.options} title={this.state.tableInStock.title} headers={this.state.tableInStock.tableHeaders} data={this.state.tableInStock.tableData} />
+            <SearchableTable options={this.state.options} title={this.state.tableOutOfStock.title} headers={this.state.tableOutOfStock.tableHeaders} data={this.state.tableOutOfStock.tableData} />
 
             <Button outline color="primary" size="lg" className="float-right">
               Order stock

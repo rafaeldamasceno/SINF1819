@@ -16,6 +16,9 @@ export default class SupplierOrder extends Component {
             tableData: [[36272,"Sociedade de fornecimento, Lda","21/02/2019"],
             [62378,"Papalaco & Papeis","12/03/2019"],
             [62153,"Recheio","30/01/2019"]],
+            options:{
+                link:true
+            }
         };
     }
 
@@ -23,7 +26,7 @@ export default class SupplierOrder extends Component {
     render() {
         return (
         <Container>
-            <SearchableTable title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData} link='true'></SearchableTable>
+            <SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData}></SearchableTable>
             <Link to='/picking-list'><Button outline color='primary' size='lg' className='float-right'>Put items away</Button></Link>
         </Container>)
     }

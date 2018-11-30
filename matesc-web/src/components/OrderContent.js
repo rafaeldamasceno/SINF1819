@@ -17,6 +17,9 @@ export default class OrderContent extends Component {
             tableData: [["A001", "Binder", "Corridor 1, Shelf 2, L", "153"],
                 ["A002", "Crayons", "Corridor 3, Shelf 1, L", "50"],
                 ["A004", "Calculator", "Corridor 2, Shelf 2, R", "13"]],
+            options:{
+                link:false
+            }
         };
     }
 
@@ -57,7 +60,7 @@ export default class OrderContent extends Component {
                     {this.state.orderInfo.total}
                 </p>
             </div>
-            <SearchableTable title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData} link='false'></SearchableTable>
+            <SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData}></SearchableTable>
         </Container>)
     }
 }
