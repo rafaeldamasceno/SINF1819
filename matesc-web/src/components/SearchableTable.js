@@ -18,7 +18,11 @@ export default class SearchableTable extends Component {
 
     showRow(row) {
         let children = [];
-        children.push(<th scope="row"><Link to='/order-content'>{row[0]}</Link></th>)
+        if(this.props.link === 'true')
+            children.push(<th scope="row"><Link to='/order-content'>{row[0]}</Link></th>)
+        else{
+            children.push(<th scope="row">{row[0]}</th>)
+        }
         for (let i = 1; i < row.length; i++) {
             children.push(<td>{row[i]}</td>);
         }
@@ -33,15 +37,28 @@ export default class SearchableTable extends Component {
         return tr;
     }
 
+    showSearch(){
+        if(this.props.search){
+            if(this.props.search === 'false'){
+                return;
+            }
+        }
+        else{
+            return (
+                <Col xs='0' className='ml-auto'>
+                    <Input type='text' placeholder='Search'></Input>
+                </Col>
+            )
+        }
+    }
+
     render() {
         return (<React.Fragment>
             <Row>
                 <Col>
                     <h1>{this.props.title}</h1>
                 </Col>
-                <Col xs='0' className='ml-auto'>
-                    <Input type='text' placeholder='Search'></Input>
-                </Col>
+                {this.showSearch()}
             </Row>
             <Table>
                 <thead>

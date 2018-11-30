@@ -4,86 +4,48 @@ import {
     Row,
     Col,
     Input,
-    Table,
     Button,
 } from 'reactstrap';
 
+import SearchableTable from "./SearchableTable";
+
 export default class Warehouse extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            tableInStock: {
+                title:"Items in stock",
+                tableHeaders:[{ name: "Code" }, { name: "Name" }, { name: "Location" }, { name: "Quantity" }],
+                tableData: [["A003", "Pencil", "Corridor 2, Shelf 1, L", "67"],
+                    ["A004", "Calculator", "Corridor 2, Shelf 1, R", "13"],
+                    ["A006", "Stapler", "Corridor 3, Shelf 2, L", "53"]]},
+            tableOutOfStock: {
+                title: "Out of stock items",
+                tableHeaders: [{ name: "Code" }, { name: "Name" }, { name: "Location" }],
+                tableData: [["A007", "Pen", "Corridor 5, Shelf 1, R"],
+                    ["A008", "Notebook", "Corridor 1, Shelf 1, L"]]
+            },
+        };
+    }
     render() {
-        return (
-        <Container>
+        return <Container>
             <Row>
-                <Col xs='0' className='ml-auto'>
-                    <Input type='text' placeholder='Search all products'></Input>
-                </Col>
-                < Col >
-                    <Button outline color='primary' size='md' className='float-right'>Edit stock</Button>
-                </Col>
+              <Col xs="0" className="ml-auto">
+                <Input type="text" placeholder="Search all products" />
+              </Col>
+              <Col>
+                <Button outline color="primary" size="md" className="float-right">
+                  Edit stock
+                </Button>
+              </Col>
             </Row>
+            <SearchableTable title={this.state.tableInStock.title} headers={this.state.tableInStock.tableHeaders} data={this.state.tableInStock.tableData} link="false" search="false" />
+            <SearchableTable title={this.state.tableOutOfStock.title} headers={this.state.tableOutOfStock.tableHeaders} data={this.state.tableOutOfStock.tableData} link="false" search="false" />
 
-            <Row>
-                <Col>
-                    <h1>Items in stock</h1>
-                </Col>
-            </Row>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">A003</th>
-                        <td>Pencil</td>
-                        <td>Corridor 2, Shelf 1, L</td>
-                        <td>67</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">A004</th>
-                        <td>Calculator</td>
-                        <td>Corridor 2, Shelf 1, R</td>
-                        <td>13</td>
-                    </tr>
-                    <tr>
-                       <th scope="row">A006</th>
-                        <td>Stapler</td>
-                        <td>Corridor 3, Shelf 2, L</td>
-                        <td>53</td>
-                    </tr>
-                </tbody>
-            </Table>
-
-            <Row>
-                <Col>
-                    <h1>Out of stock items</h1>
-                </Col>
-            </Row>
-            <Table id='table-out-of-stock-items'>
-                <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Location</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">A007</th>
-                        <td>Pen</td>
-                        <td>Corridor 5, Shelf 1, R</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">A008</th>
-                        <td>Notebook</td>
-                        <td>Corridor 1, Shelf 1, L</td>
-                    </tr>
-                </tbody>
-            </Table>
-            <Button outline color='primary' size='lg' className='float-right'>Order stock</Button>
-        </Container>)
+            <Button outline color="primary" size="lg" className="float-right">
+              Order stock
+            </Button>
+          </Container>;
     }
 }

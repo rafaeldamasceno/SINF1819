@@ -3,15 +3,26 @@ import {
     Container,
     Row,
     Col,
-    Input,
-    Table,
     Button,
 } from 'reactstrap';
+import SearchableTable from "./SearchableTable";
 
 export default class OrderContent extends Component {
-    render() {
-        return (<Container>
+    constructor(props) {
+        super(props);
+        this.state = {
+            orderInfo: { ID: 67326, deadline: "12/01/2019", client: "Papelaria Mundo", total:"782€"},
+            title: "Items in order",
+            tableHeaders: [{ name: "Product Code" }, { name: "Product Name" }, { name: "Location" }, { name: "Quantity" }],
+            tableData: [["A001", "Binder", "Corridor 1, Shelf 2, L", "153"],
+                ["A002", "Crayons", "Corridor 3, Shelf 1, L", "50"],
+                ["A004", "Calculator", "Corridor 2, Shelf 2, R", "13"]],
+        };
+    }
 
+    render() {
+        return (
+        <Container>
             <Row>
                 <Col>
                     <h1>Order info</h1>
@@ -25,67 +36,28 @@ export default class OrderContent extends Component {
                     <span class='font-weight-bold mr-1'>
                         ID:
                     </span>
-                    67326
+                    {this.state.orderInfo.ID}
                 </p>
                 <p>
                     <span class='font-weight-bold mr-1'>
                         Deadline:
                     </span>
-                    12/01/2019
+                    {this.state.orderInfo.deadline}
                 </p>
                 <p>
                     <span class='font-weight-bold mr-1'>
                         Client:
                     </span>
-                    Papelaria Mundo
+                    {this.state.orderInfo.client}
                 </p>
                 <p>
                     <span class='font-weight-bold mr-1'>
                         Total:
                     </span>
-                    782€
+                    {this.state.orderInfo.total}
                 </p>
             </div>
-
-
-            <Row>
-                <Col>
-                    <h1>Items in order</h1>
-                </Col>
-                <Col xs='0' className='ml-auto'>
-                    <Input type='text' placeholder='Search'></Input>
-                </Col>
-            </Row>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Product Code</th>
-                        <th>Product Name</th>
-                        <th>Location</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">A001</th>
-                        <td>Binder</td>
-                        <td>Corridor 1, Shelf 2, L</td>
-                        <td>153</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">A002</th>
-                        <td>Crayons</td>
-                        <td>Corridor 3, Shelf 1, L</td>
-                        <td>50</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">A004</th>
-                        <td>Calculator</td>
-                        <td>Corridor 2, Shelf 1, R</td>
-                        <td>13</td>
-                    </tr>
-                </tbody>
-            </Table>
+            <SearchableTable title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData} link='false'></SearchableTable>
         </Container>)
     }
 }

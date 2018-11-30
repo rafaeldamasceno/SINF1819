@@ -23,7 +23,7 @@ export default class SupplierOrder extends Component {
     render() {
         return (
         <Container>
-            <SearchableTable title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData}></SearchableTable>
+            <SearchableTable title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData} link='true'></SearchableTable>
             <Link to='/picking-list'><Button outline color='primary' size='lg' className='float-right'>Put items away</Button></Link>
         </Container>)
     }
