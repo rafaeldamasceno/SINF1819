@@ -7,9 +7,13 @@
   "author": "SINF",
   "license": "ISC",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "node-dijkstra": "^2.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.7"
   }
 }
