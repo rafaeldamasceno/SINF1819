@@ -13,9 +13,9 @@ export default class UnprocessedOrders extends Component {
         this.state = {
             title: "Client Orders",
             headers: [{ name: "Order ID" }, { name: "Client" }, { name: "Deadline" }, { name: "Include" }],
-            data: [[36272, "Bertrand NorteShopping", "21/02/2019"],
-                [62153, "FNAC Braga", "12/03/2019"],
-                [24263, "Papelaria Alegria", "04/02/2019"]],
+            data: [["A36", "Bertrand NorteShopping", "21/02/2019"],
+                ["A12", "FNAC Braga", "12/03/2019"],
+                ["A23", "Papelaria Alegria", "04/02/2019"]],
             options:{
                 link:true
             }

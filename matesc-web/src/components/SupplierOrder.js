@@ -13,11 +13,13 @@ export default class SupplierOrder extends Component {
         this.state = {
             title: "Supplier Orders",
             tableHeaders:[{name:"Order ID"},{name:"Supplier"},{name:"Arrival Date"}],
-            tableData: [[36272,"Sociedade de fornecimento, Lda","21/02/2019"],
-            [62378,"Papalaco & Papeis","12/03/2019"],
-            [62153,"Recheio","30/01/2019"]],
+            tableData: [["A27","Sociedade de fornecimento, Lda","21/02/2019"],
+                ["A14","Papalaco & Papeis","12/03/2019"],
+                ["A19","Recheio","30/01/2019"]],
             options:{
-                link:true
+                link:true,
+                search:true
+            
             }
         };
     }

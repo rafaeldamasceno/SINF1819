@@ -4,6 +4,7 @@ import {
     Col,
     Input,
     Table,
+    Button
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
@@ -47,6 +48,16 @@ export default class SearchableTable extends Component {
         }
     }
 
+    showPrint(){
+        if (this.props.options.print){
+            return(
+                <Col xs='1' className='ml-auto mr-2'>
+                   <Button><i class="fas fa-print"></i> Print</Button>
+                </Col>
+            )
+        }
+    }
+
     render() {
         console.log(this.props.options);
         return (<React.Fragment>
@@ -54,6 +65,7 @@ export default class SearchableTable extends Component {
                 <Col>
                     <h1>{this.props.title}</h1>
                 </Col>
+                {this.showPrint()}
                 {this.showSearch()}
             </Row>
             <Table>

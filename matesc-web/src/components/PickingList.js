@@ -2,60 +2,31 @@ import React, { Component } from 'react';
 import {
     Container,
     Row,
-    Col,
-    Input,
-    Table,
     Button
 } from 'reactstrap';
+import SearchableTable from "./SearchableTable";
 
 export default class PickingList extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            title: "Picking list",
+            tableHeaders: [{ name: "Order ID" }, { name: "Product Code" }, { name: "Product Name" }, { name: "Location" }, { name: "Quantity" }],
+            tableData: [[32372, "A001", "Binder", "Corridor 1, Shelf 2, L","153"],
+                [31471, "A003", "Stapler", "Corridor 3, Shelf 2, L","50"],
+                [12345, "A004", "Calculator", "Corridor 2, Shelf 1, R", "13"]],
+            options: {
+                link: true,
+                search:true,
+                print:true
+            }
+        };
+    }
+
     render() {
         return (<Container>
-            <Row>
-                <Col>
-                    <h1>Picking list</h1>
-                </Col>
-                <Col xs='1' className='ml-auto mr-2'>
-                   <Button><i class="fas fa-print"></i> Print</Button>
-                </Col>
-                <Col xs='0' className='ml-auto'>
-                    <Input type='text' placeholder='Search'></Input>
-                </Col>
-            </Row>
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Product Code</th>
-                        <th>Product Name</th>
-                        <th>Location</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">32372</th>
-                        <td>A001</td>
-                        <td>Binder</td>
-                        <td>Corridor 1, Shelf 2, L</td>
-                        <td>153</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">31471</th>
-                        <td>A003</td>
-                        <td>Stapler</td>
-                        <td>Corridor 3, Shelf 2, L</td>
-                        <td>53</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">12345</th>
-                        <td>A004</td>
-                        <td>Calculator</td>
-                        <td>Corridor 2, Shelf 1, R</td>
-                        <td>13</td>
-                    </tr>
-                </tbody>
-            </Table>
+            <SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData}></SearchableTable>
             <Row>
                 <Button outline color='success' size='lg' className='float-right ml-auto'>Complete picking</Button>
             </Row>

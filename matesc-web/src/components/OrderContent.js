@@ -18,7 +18,8 @@ export default class OrderContent extends Component {
                 ["A002", "Crayons", "Corridor 3, Shelf 1, L", "50"],
                 ["A004", "Calculator", "Corridor 2, Shelf 2, R", "13"]],
             options:{
-                link:false
+                link:false,
+                search: true
             }
         };
     }
