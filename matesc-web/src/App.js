@@ -16,6 +16,7 @@ import OrderContent from './components/OrderContent';
 import PickingList from './components/PickingList';
 import Warehouse from './components/Warehouse';
 import SupplierOrder from './components/SupplierOrder';
+import ReplenishmentList from './components/ReplenishmentList';
 
 const AppContext = React.createContext();
 export const AppProvider = AppContext.Provider;
@@ -87,6 +88,7 @@ class App extends Component {
             <Route path='/order-content' component={OrderContent} />
             <Route path='/picking-list' component={PickingList} />
             <Route path='/warehouse' component={Warehouse} />
+            <Route path='/replenishment-list' component={ReplenishmentList}/>
           </React.Fragment>
         </BrowserRouter>
       </AppProvider>

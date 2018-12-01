@@ -24,7 +24,7 @@ export default class SupplierOrder extends Component {
         return (
         <Container>
             <SearchableTableCheckbox title={this.state.title} headers={this.state.headers} data={this.state.data} />
-            <Link to='/picking-list'><Button outline color='primary' size='lg' className='float-right'>Put items away</Button></Link>
+            <Link to='/replenishment-list'><Button outline color='primary' size='lg' className='float-right'>Put items away</Button></Link>
         </Container>)
     }
 }
