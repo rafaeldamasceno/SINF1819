@@ -7,7 +7,7 @@ import {
 } from 'reactstrap';
 import SearchableTable from "./SearchableTable";
 
-export default class OrderContent extends Component {
+export default class ClientOrderContent extends Component {
     constructor(props) {
         super(props);
         this.state = {

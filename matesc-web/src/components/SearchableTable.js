@@ -20,7 +20,7 @@ export default class SearchableTable extends Component {
     showRow(row) {
         let children = [];
         if(this.props.options.link)
-            children.push(<th scope="row"><Link to='/order-content'>{row[0]}</Link></th>)
+            children.push(<th scope="row"><Link to='/client-order-content'>{row[0]}</Link></th>)
         else{
             children.push(<th scope="row">{row[0]}</th>)
         }

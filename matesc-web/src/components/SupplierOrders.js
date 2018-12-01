@@ -6,7 +6,7 @@ import {
 import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
 
-export default class SupplierOrder extends Component {
+export default class SupplierOrders extends Component {
     constructor(props) {
         super(props);
 

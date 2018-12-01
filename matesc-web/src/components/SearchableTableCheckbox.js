@@ -20,7 +20,7 @@ export default class SearchableTableCheckbox extends Component {
 
   showRow(row) {
     let children = [];
-    children.push(<th scope="row"><Link to='/order-content'>{row[0]}</Link></th>);
+    children.push(<th scope="row"><Link to='/client-order-content'>{row[0]}</Link></th>);
     let i = 1;
     for (; i < row.length; i++) {
       children.push(<td>{row[i]}</td>);
