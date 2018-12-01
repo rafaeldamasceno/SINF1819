@@ -68,7 +68,7 @@ export default class SearchableTable extends Component {
                 {this.showPrint()}
                 {this.showSearch()}
             </Row>
-            <Table>
+            <Table striped>
                 <thead>
                     <tr>
                         {this.showHeaders()}

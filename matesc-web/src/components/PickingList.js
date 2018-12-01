@@ -13,9 +13,9 @@ export default class PickingList extends Component {
         this.state = {
             title: "Picking list",
             tableHeaders: [{ name: "Order ID" }, { name: "Product Code" }, { name: "Product Name" }, { name: "Location" }, { name: "Quantity" }],
-            tableData: [[32372, "A001", "Binder", "Corridor 1, Shelf 2, L","153"],
-                [31471, "A003", "Stapler", "Corridor 3, Shelf 2, L","50"],
-                [12345, "A004", "Calculator", "Corridor 2, Shelf 1, R", "13"]],
+            tableData: [["A53", "A001", "Binder", "Corridor 1, Shelf 2, L","153"],
+                ["A43", "A003", "Stapler", "Corridor 3, Shelf 2, L","50"],
+                ["A26", "A004", "Calculator", "Corridor 2, Shelf 1, R", "13"]],
             options: {
                 link: true,
                 search:true,

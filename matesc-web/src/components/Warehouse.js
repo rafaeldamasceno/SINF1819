@@ -4,7 +4,6 @@ import {
     Row,
     Col,
     Input,
-    Button,
 } from 'reactstrap';
 
 import SearchableTable from "./SearchableTable";
@@ -38,18 +37,9 @@ export default class Warehouse extends Component {
               <Col xs="0" className="ml-auto">
                 <Input type="text" placeholder="Search all products" />
               </Col>
-              <Col>
-                <Button outline color="primary" size="md" className="float-right">
-                  Edit stock
-                </Button>
-              </Col>
             </Row>
             <SearchableTable options={this.state.options} title={this.state.tableInStock.title} headers={this.state.tableInStock.tableHeaders} data={this.state.tableInStock.tableData} />
             <SearchableTable options={this.state.options} title={this.state.tableOutOfStock.title} headers={this.state.tableOutOfStock.tableHeaders} data={this.state.tableOutOfStock.tableData} />
-
-            <Button outline color="primary" size="lg" className="float-right">
-              Order stock
-            </Button>
           </Container>;
     }
 }

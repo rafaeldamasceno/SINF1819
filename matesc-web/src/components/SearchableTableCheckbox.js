@@ -60,7 +60,7 @@ export default class SearchableTableCheckbox extends Component {
         </Col>
         {this.showSearch()}
       </Row>
-      <Table>
+      <Table striped>
         <thead>
           <tr>
             {this.showHeaders()}
