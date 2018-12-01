@@ -17,7 +17,7 @@ export default class ReplenishmentList extends Component {
                 ["A43", "A003", "Stapler", "Corridor 3, Shelf 2, L","50"],
                 ["A26", "A004", "Calculator", "Corridor 2, Shelf 1, R", "13"]],
             options: {
-                link: true,
+                link: '/supplier-order-content',
                 search:true,
                 print:true
             }

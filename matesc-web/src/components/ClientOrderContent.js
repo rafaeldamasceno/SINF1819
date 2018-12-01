@@ -29,7 +29,7 @@ export default class ClientOrderContent extends Component {
         <Container>
             <Row>
                 <Col>
-                    <h1>Order info</h1>
+                    <h1>Client order info</h1>
                 </Col>
                 <Col xs='1' className='ml-auto mr-2'>
                     <Button><i class="fas fa-print"></i> Print</Button>

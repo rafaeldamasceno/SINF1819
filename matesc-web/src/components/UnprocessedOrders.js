@@ -17,14 +17,14 @@ export default class UnprocessedOrders extends Component {
                 ["A12", "FNAC Braga", "12/03/2019"],
                 ["A23", "Papelaria Alegria", "04/02/2019"]],
             options:{
-                link:true
+                link:'/client-order-content'
             }
         };
     }
 
     render() {
         return <Container>
-            <SearchableTableCheckbox title={this.state.title} headers={this.state.headers} data={this.state.data} />
+            <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} />
             <Link to="/picking-list">
               <Button outline color="primary" size="lg" className="float-right">
                 Create picking wave

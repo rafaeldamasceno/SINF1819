@@ -16,6 +16,9 @@ export default class SupplierOrders extends Component {
             data: [["A27","Sociedade de fornecimento, Lda","21/02/2019"],
                 ["A14","Papalaco & Papeis","12/03/2019"],
                 ["A19","Recheio","30/01/2019"]],
+            options:{
+                link:'/supplier-order-content'
+            }
         };
     }
 
@@ -23,7 +26,7 @@ export default class SupplierOrders extends Component {
     render() {
         return (
         <Container>
-            <SearchableTableCheckbox title={this.state.title} headers={this.state.headers} data={this.state.data} />
+            <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} />
             <Link to='/replenishment-list'><Button outline color='primary' size='lg' className='float-right'>Put items away</Button></Link>
         </Container>)
     }
