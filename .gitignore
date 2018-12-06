@@ -61,3 +61,4 @@ typings/
 .next
 matesc-web/package-lock.json
 matesc-api/package-lock.json
+package-lock.json
