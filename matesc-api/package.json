@@ -7,10 +7,11 @@
   "author": "SINF",
   "license": "ISC",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js --ignore db.json"
   },
   "dependencies": {
     "express": "^4.16.4",
+    "lowdb": "^1.0.0",
     "node-dijkstra": "^2.5.0"
   },
   "devDependencies": {
