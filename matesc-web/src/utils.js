@@ -40,16 +40,26 @@ export function makeHeaders(authentication) {
     };
 }
 
-/*export function unprocessedClientOrdersFetch(authentication){
-    return query(authentication,"SELECT CONCAT(CD.Serie, CD.NumDoc) as OrderId, CD.Entidade, CD.Nome, CD.Data, CDS.Estado FROM CabecDoc CD INNER JOIN CabecDocStatus CDS ON CDS.IdCabecDoc = CD.Id AND CD.TipoDoc = 'ECL' AND CDS.Anulado = 'false' AND CDS.Fechado = 'false' AND CDS.Estado = 'P'");
-}*/
-
 export function unprocessedClientOrdersFetch(authentication){
     return fetch(`${API_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
         body:JSON.stringify("SELECT CONCAT(CD.Serie, CD.NumDoc) as OrderId, CD.Entidade, CD.Nome, CD.Data, CDS.Estado FROM CabecDoc CD INNER JOIN CabecDocStatus CDS ON CDS.IdCabecDoc = CD.Id AND CD.TipoDoc = 'ECL' AND CDS.Anulado = 'false' AND CDS.Fechado = 'false' AND CDS.Estado = 'P'")
     });
+}
+
+export function  compareStatesData(prevData, newData){
+    if(prevData.length != newData.length){
+        return false;
+    }else{
+        for (let i = 0; i < prevData.length; i++) {
+            for (let j = 0; j < prevData[i].length; j++) {
+                //continuar esta funçao
+                
+            }
+            
+        }
+    }
 }
 
 export function loadItems(authentication) {

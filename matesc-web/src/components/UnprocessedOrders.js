@@ -5,8 +5,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
-import { AppConsumer } from '../App';
-import {unprocessedClientOrdersFetch, query, loadItems } from '../utils';
+import {unprocessedClientOrdersFetch, compareStatesData} from '../utils';
 
 export default class UnprocessedOrders extends Component {
 
@@ -23,32 +22,48 @@ export default class UnprocessedOrders extends Component {
             }
         };
     }
-    static getDerivedStateFromProps(props, state){
-        console.log("ola eu tou no getderivedstates");
-        
-        console.log(props);
-        
-    }
+
     componentDidMount(){
-        console.log("ola eu tou no componentdidmount");
-        console.log(this.props);
+        if(this.props !== undefined){
+            if(this.props.authentication !== undefined){
+                unprocessedClientOrdersFetch(this.props.authentication)
+                .then(r => r.json())
+                .then(r => {this.setStateTableData(r)})
+            }
+        }             
         
     }
 
-    componentDidUpdate(prevProps){
-        console.log("ola eu tou no did update");
-        console.log(this.props);
-        if(this.props.authentication !== undefined){
-            console.log("ola tou a chamar o fetch e nao sou undefined");
-            console.log(this.props.authentication);
-    
-            unprocessedClientOrdersFetch(this.props.authentication)
-            .then(console.log("hey"))
-            .then(r => r.json())
-            .then(r => {console.log(r)});
-        }
+    componentDidUpdate(prevProps, prevState){
+      
+        //compareStatesData(prevState.data , this.state.data);
+        //continuar funçao
+        console.log(prevState != this.state);
         
+        if(this.props.authentication !== undefined){
+            unprocessedClientOrdersFetch(this.props.authentication)
+            .then(r => r.json())
+            .then(r => {this.setStateTableData(r)})
+        }
     }
+
+    setStateTableData(response){
+
+       let a = [];
+       //building state with response
+        for (let i = 0; i < response.DataSet.Table.length; i++) {
+                let data = response.DataSet.Table[i]['Data'];
+                data = data.replace("T", " ");
+                let line = [response.DataSet.Table[i]['OrderId'],response.DataSet.Table[i]['Nome'],data];
+                a.push(line);
+        }
+
+       this.setState({
+          data: a,
+        }) 
+    }
+
+
 
     render() {
         return <Container>
