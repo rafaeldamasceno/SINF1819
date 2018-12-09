@@ -48,19 +48,15 @@ export function unprocessedClientOrdersFetch(authentication){
     });
 }
 
-export function  compareStatesData(prevData, newData){
-    if(prevData.length != newData.length){
-        return false;
-    }else{
-        for (let i = 0; i < prevData.length; i++) {
-            for (let j = 0; j < prevData[i].length; j++) {
-                //continuar esta funçao
-                
-            }
-            
-        }
-    }
+export function unprocessedSuppliersOrdersFetch(authentication){
+    return fetch(`${API_URL}/Administrador/Consulta`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body:JSON.stringify("SELECT CONCAT(CC.Serie, CC.NumDoc) as OrderId, CC.Entidade, CC.Nome, CC.DataDoc, CCS.Estado FROM CabecCompras CC INNER JOIN CabecComprasStatus CCS ON CCS.IdCabecCompras = CC.Id AND CC.TipoDoc = 'ECF' AND CCS.Anulado = 'false' AND CCS.Fechado = 'false' AND CCS.Estado = 'P'"
+        )
+    });
 }
+
 
 export function loadItems(authentication) {
     return fetch(`${API_URL}/Base/Artigos/LstArtigos`, {

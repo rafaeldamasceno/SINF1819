@@ -5,7 +5,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
-import {unprocessedClientOrdersFetch, compareStatesData} from '../utils';
+import {unprocessedClientOrdersFetch} from '../utils';
 
 export default class UnprocessedOrders extends Component {
 
@@ -25,32 +25,37 @@ export default class UnprocessedOrders extends Component {
     }
 
     componentDidMount(){
-        if(this.props !== undefined){
-            if(this.props.authentication !== undefined){
-                unprocessedClientOrdersFetch(this.props.authentication)
-                .then(r => r.json())
-                .then(r => {this.setStateTableData(r)})
-            }
-        }             
+        if(!this.state.updated){
+            if(this.props !== undefined){
+                if(this.props.authentication !== undefined){
+                    unprocessedClientOrdersFetch(this.props.authentication)
+                    .then(r => r.json())
+                    .then(r => {this.setStateTableData(r)})
+                    .then(this.setState({
+                        updated:true
+                    }))
+                }
+            }  
+        }
+                  
         
     }
 
-    componentDidUpdate(prevProps, prevState){
-      
+    componentDidUpdate(){
         //know if i already updated
         if(!this.state.updated){
             if(this.props.authentication !== undefined){
                 unprocessedClientOrdersFetch(this.props.authentication)
-                .then(console.log("chamei o fetch"))
                 .then(r => r.json())
                 .then(r => {this.setStateTableData(r)})
-                .then(this.state.updated = true)
+                .then(this.setState ({
+                    updated: true
+                }))
             }
         }
     }
 
-    setStateTableData(response){
-
+    setStateTableData(response){        
        let a = [];
        //building state with response
         for (let i = 0; i < response.DataSet.Table.length; i++) {
