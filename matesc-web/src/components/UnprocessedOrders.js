@@ -19,7 +19,8 @@ export default class UnprocessedOrders extends Component {
             ["A23", "Papelaria Alegria", "04/02/2019"]],
             options: {
                 link: '/client-order-content'
-            }
+            },
+            updated: false
         };
     }
 
@@ -36,14 +37,15 @@ export default class UnprocessedOrders extends Component {
 
     componentDidUpdate(prevProps, prevState){
       
-        //compareStatesData(prevState.data , this.state.data);
-        //continuar funçao
-        console.log(prevState != this.state);
-        
-        if(this.props.authentication !== undefined){
-            unprocessedClientOrdersFetch(this.props.authentication)
-            .then(r => r.json())
-            .then(r => {this.setStateTableData(r)})
+        //know if i already updated
+        if(!this.state.updated){
+            if(this.props.authentication !== undefined){
+                unprocessedClientOrdersFetch(this.props.authentication)
+                .then(console.log("chamei o fetch"))
+                .then(r => r.json())
+                .then(r => {this.setStateTableData(r)})
+                .then(this.state.updated = true)
+            }
         }
     }
 
