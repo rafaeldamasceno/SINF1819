@@ -17,7 +17,7 @@ export function authenticate() {
             {
                 username: 'FEUP',
                 password: 'qualquer1',
-                company: 'demo',
+                company: 'MATESC',
                 instance: 'DEFAULT',
                 line: 'professional',
                 grant_type: 'password'
@@ -26,11 +26,30 @@ export function authenticate() {
     });
 }
 
-export function makeHeaders(authentication) {
+/*export function makeHeaders(authentication) {
     return {
         'Authorization' : `Bearer ${authentication['access_token']}`,
         'Accept': 'application/json'
     };
+}*/
+
+export function makeHeaders(authentication) {
+    return {
+        'Authorization' : `Bearer ${authentication['access_token']}`,
+        'Content-Type': 'application/json'
+    };
+}
+
+/*export function unprocessedClientOrdersFetch(authentication){
+    return query(authentication,"SELECT CONCAT(CD.Serie, CD.NumDoc) as OrderId, CD.Entidade, CD.Nome, CD.Data, CDS.Estado FROM CabecDoc CD INNER JOIN CabecDocStatus CDS ON CDS.IdCabecDoc = CD.Id AND CD.TipoDoc = 'ECL' AND CDS.Anulado = 'false' AND CDS.Fechado = 'false' AND CDS.Estado = 'P'");
+}*/
+
+export function unprocessedClientOrdersFetch(authentication){
+    return fetch(`${API_URL}/Administrador/Consulta`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body:JSON.stringify("SELECT CONCAT(CD.Serie, CD.NumDoc) as OrderId, CD.Entidade, CD.Nome, CD.Data, CDS.Estado FROM CabecDoc CD INNER JOIN CabecDocStatus CDS ON CDS.IdCabecDoc = CD.Id AND CD.TipoDoc = 'ECL' AND CDS.Anulado = 'false' AND CDS.Fechado = 'false' AND CDS.Estado = 'P'")
+    });
 }
 
 export function loadItems(authentication) {
@@ -39,9 +58,11 @@ export function loadItems(authentication) {
     });
 }
 
+
 export function query(authentication, query) {
     return fetch(`${API_URL}/Administrador/Consulta`, {
+        method:'POST',
         headers: makeHeaders(authentication),
-        body: `"${query}"`
+        body: `${query}`
     });
 }
