@@ -6,6 +6,7 @@ import {
     Button,
 } from 'reactstrap';
 import SearchableTable from "./SearchableTable";
+import { clientOrderInfoContent, getUrlVars, clientOrderContent, errorMessage } from '../utils';
 
 export default class ClientOrderContent extends Component {
     constructor(props) {
@@ -20,13 +21,110 @@ export default class ClientOrderContent extends Component {
             options:{
                 link:false,
                 search: true
-            }
+            },
+            updated: false,
+            error: false
         };
     }
+
+    async componentDidMount() {
+        let id = getUrlVars()['id'];
+        let copy = Object.assign({}, this.state.orderInfo);
+        copy.ID = id;
+        this.setState({
+            orderInfo: copy
+        });
+        if (!this.state.updated) {
+            if (this.props !== undefined) {
+                if (this.props.authentication !== undefined) {
+                    this.setState({
+                        updated: true
+                    })
+                    let r = await clientOrderInfoContent(this.props.authentication, id[0], id.substring(1, id.length));                  
+                    r = await r.json();
+                    this.setStateOrderInfo(r);
+
+                    r = await clientOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
+                    r = await r.json();
+                    this.setStateOrderContent(r);
+                }
+            }
+        }
+
+    }
+
+    async componentDidUpdate() {
+        //know if i already updated
+        if (!this.state.updated) {
+              if (this.props !== undefined) {
+                if (this.props.authentication !== undefined) {
+                    let id = this.state.orderInfo.ID;
+                    this.setState({
+                        updated: true
+                    })
+                    let r = await clientOrderInfoContent(this.props.authentication, id[0], id.substring(1, id.length));
+                    r = await r.json();
+                    this.setStateOrderInfo(r);
+
+                    r = await clientOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
+                    r = await r.json();
+                    this.setStateOrderContent(r);
+                }
+            }
+        }
+    }
+
+    setStateOrderInfo(response) {
+        if (!response.DataSet) {
+              this.setState({
+                error: true
+            });
+            return;
+        }
+        //building state with response     
+        let info = response.DataSet.Table[0];
+        let ID = info['OrderId'];
+        let deadline = info['Data'];
+        deadline = deadline.replace("T", " ");
+        let client = info['Nome'];
+        let total = info['PrecoTotal'] + "€";
+
+        let orderInfo = { ID, deadline, client, total };
+
+        this.setState({
+            orderInfo: orderInfo
+        })
+    }
+
+    setStateOrderContent(response) {
+        if (!response.DataSet) {
+            this.setState({
+                error: true
+            });
+            return;
+        }
+        let a = [];
+        //building state with response
+        for (let i = 0; i < response.DataSet.Table.length; i++) {
+            let lineInfo = response.DataSet.Table[i];
+            let code = lineInfo['Artigo'];
+            let description = lineInfo['Descricao'];
+            let location = lineInfo['DescricaoLocalizacao'];
+            let quantity = lineInfo['Quantidade'];
+            let line = [code, description, location, quantity];
+            a.push(line);
+        }
+
+        this.setState({
+            tableData: a,
+        })
+    }
+
 
     render() {
         return (
         <Container>
+            {errorMessage(this.state.error)}
             <Row>
                 <Col>
                     <h1>Client order info</h1>

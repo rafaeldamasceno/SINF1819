@@ -80,6 +80,24 @@ export function supplierOrderContent(authentication, Doc_Serie, Doc_Number){
     });
 }
 
+export async function clientOrderInfoContent(authentication, Doc_Serie, Doc_Number){
+    return fetch(`${API_URL}/Administrador/Consulta`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body:JSON.stringify(`SELECT CONCAT(CD.Serie, CD.NumDoc) as OrderId, CD.Data, CD.Nome, CD.Entidade, SUM(LD.PrecUnit*LD.Quantidade + LD.TotalIva) as PrecoTotal FROM LinhasDoc LD INNER JOIN CabecDoc CD ON LD.IdCabecDoc = CD.Id WHERE CD.Serie = '${Doc_Serie}' AND CD.NumDoc = ${Doc_Number} AND CD.TipoDoc = 'ECL' GROUP BY CD.Data, CD.Nome, CD.Entidade, CD.Id, CD.Serie, CD.NumDoc`
+        )
+    });
+}
+
+export function clientOrderContent(authentication, Doc_Serie, Doc_Number){
+    return fetch(`${API_URL}/Administrador/Consulta`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body:JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigos.* FROM ArmazemLocalizacoes INNER JOIN (SELECT LD.Artigo, LD.Descricao, LD.Localizacao, LD.Quantidade FROM LinhasDoc LD INNER JOIN CabecDoc CD ON LD.IdCabecDoc = CD.Id WHERE CD.Serie = '${Doc_Serie}' AND CD.NumDoc = ${Doc_Number} AND CD.TipoDoc = 'ECL') as Artigos ON ArmazemLocalizacoes.Localizacao = Artigos.Localizacao`
+        )
+    });
+}
+
 export function errorMessage(error){
     if(error){
         return(
