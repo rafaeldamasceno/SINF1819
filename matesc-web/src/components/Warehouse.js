@@ -15,30 +15,50 @@ export default class Warehouse extends Component {
         super(props);
         this.state = {
             tableInStock: {
-                title:"Items in stock",
-                tableHeaders:[{ name: "Code" }, { name: "Name" }, { name: "Location" }, { name: "Quantity" }],
+                title: "Items in stock",
+                tableHeaders: [{ name: "Code" }, { name: "Name" }, { name: "Location" }, { name: "Quantity" }],
                 tableData: [["A003", "Pencil", "Corridor 2, Shelf 1, L", "67"],
-                    ["A004", "Calculator", "Corridor 2, Shelf 1, R", "13"],
-                    ["A006", "Stapler", "Corridor 3, Shelf 2, L", "53"]]},
+                ["A004", "Calculator", "Corridor 2, Shelf 1, R", "13"],
+                ["A006", "Stapler", "Corridor 3, Shelf 2, L", "53"]]
+            },
             tableOutOfStock: {
                 title: "Out of stock items",
                 tableHeaders: [{ name: "Code" }, { name: "Name" }, { name: "Location" }],
                 tableData: [["A007", "Pen", "Corridor 5, Shelf 1, R"],
-                    ["A008", "Notebook", "Corridor 1, Shelf 1, L"]]
+                ["A008", "Notebook", "Corridor 1, Shelf 1, L"]]
             },
-            options:{
-                link:false,
-                search:false 
+            options: {
+                link: false,
+                search: false
             },
-            updated:false,
-            error:false
+            updated: false,
+            error: false
         };
     }
+    async componentDidMount() {
+        if (!this.state.updated) {
+            if (this.props !== undefined) {
+                if (this.props.authentication !== undefined) {
+                    this.setState({
+                        updated: true
+                    })
+                    let r = await itemsInStock(this.props.authentication);
+                    r = await r.json();
+                    this.setStateItemsInStock(r);
 
+                    r = await itemsOutOfStock(this.props.authentication);
+                    r = await r.json();
+                    this.setStateItemsOutOfStock(r);
+                }
+            }
+        }
+
+
+    }
     async componentDidUpdate() {
         //know if i already updated
         if (!this.state.updated) {
-              if (this.props !== undefined) {
+            if (this.props !== undefined) {
                 if (this.props.authentication !== undefined) {
                     this.setState({
                         updated: true
@@ -55,9 +75,9 @@ export default class Warehouse extends Component {
         }
     }
 
-    setStateItemsInStock(response) {        
+    setStateItemsInStock(response) {
         if (!response.DataSet) {
-              this.setState({
+            this.setState({
                 error: true
             });
             return;
@@ -84,40 +104,40 @@ export default class Warehouse extends Component {
     setStateItemsOutOfStock(response) {
         if (!response.DataSet) {
             this.setState({
-              error: true
-          });
-          return;
-      }
-      let a = [];
-      //building state with response
-      for (let i = 0; i < response.DataSet.Table.length; i++) {
-          let lineInfo = response.DataSet.Table[i];
-          let code = lineInfo['Artigo'];
-          let name = lineInfo['Nome'];
-          let location = lineInfo['DescricaoLocalizacao'];
-          let line = [code, name, location];
-          a.push(line);
-      }
-      let copy = Object.assign({}, this.state.tableOutOfStock);
-      copy.tableData = a;
+                error: true
+            });
+            return;
+        }
+        let a = [];
+        //building state with response
+        for (let i = 0; i < response.DataSet.Table.length; i++) {
+            let lineInfo = response.DataSet.Table[i];
+            let code = lineInfo['Artigo'];
+            let name = lineInfo['Nome'];
+            let location = lineInfo['DescricaoLocalizacao'];
+            let line = [code, name, location];
+            a.push(line);
+        }
+        let copy = Object.assign({}, this.state.tableOutOfStock);
+        copy.tableData = a;
 
-      this.setState({
-        tableOutOfStock: copy
-      })
+        this.setState({
+            tableOutOfStock: copy
+        })
     }
 
 
 
     render() {
         return <Container>
-             {errorMessage(this.state.error)}
+            {errorMessage(this.state.error)}
             <Row>
-              <Col xs="0" className="ml-auto">
-                <Input type="text" placeholder="Search all products" />
-              </Col>
+                <Col xs="0" className="ml-auto">
+                    <Input type="text" placeholder="Search all products" />
+                </Col>
             </Row>
             <SearchableTable options={this.state.options} title={this.state.tableInStock.title} headers={this.state.tableInStock.tableHeaders} data={this.state.tableInStock.tableData} />
             <SearchableTable options={this.state.options} title={this.state.tableOutOfStock.title} headers={this.state.tableOutOfStock.tableHeaders} data={this.state.tableOutOfStock.tableData} />
-          </Container>;
+        </Container>;
     }
 }
