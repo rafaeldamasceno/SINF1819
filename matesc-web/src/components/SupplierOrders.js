@@ -26,8 +26,8 @@ export default class SupplierOrders extends Component {
 
     componentDidMount(){
         if(!this.state.updated){
-            if(this.props !== undefined){
-                if(this.props.authentication !== undefined){
+            if(this.props){
+                if(this.props.authentication){
                     unprocessedSuppliersOrdersFetch(this.props.authentication)
                     .then(r => r.json())
                     .then(r => {this.setStateTableData(r)})
@@ -44,7 +44,7 @@ export default class SupplierOrders extends Component {
       
         //know if i already updated
         if(!this.state.updated){
-            if(this.props.authentication !== undefined){
+            if(this.props.authentication){
                 unprocessedSuppliersOrdersFetch(this.props.authentication)
                 .then(r => r.json())
                 .then(r => {this.setStateTableData(r)})

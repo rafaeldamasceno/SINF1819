@@ -57,7 +57,14 @@ export function unprocessedSuppliersOrdersFetch(authentication){
     });
 }
 
-
+export function supplierOrderContent(authentication, Doc_Serie, Doc_Number){
+    return fetch(`${API_URL}/Administrador/Consulta`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body:JSON.stringify(`SELECT CONCAT(CC.Serie, CC.NumDoc) as OrderId, CC.DataDoc, CC.Nome, CC.Entidade, SUM(LC.PrecUnit*LC.Quantidade + LC.TotalIva) as PrecoTotal FROM LinhasCompras LC INNER JOIN CabecCompras CC ON LC.IdCabecCompras = CC.Id WHERE CC.Serie = '${Doc_Serie}' AND CC.NumDoc = ${Doc_Number} AND CC.TipoDoc = 'ECF' GROUP BY CC.DataDoc, CC.Nome, CC.Entidade, CC.Id, CC.Serie, CC.NumDoc`
+        )
+    });
+}
 export function loadItems(authentication) {
     return fetch(`${API_URL}/Base/Artigos/LstArtigos`, {
         headers: makeHeaders(authentication)
@@ -72,3 +79,11 @@ export function query(authentication, query) {
         body: `${query}`
     });
 }
+
+export function getUrlVars() {
+    var vars = {};
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+      vars[key] = value;
+    });
+    return vars;
+  }

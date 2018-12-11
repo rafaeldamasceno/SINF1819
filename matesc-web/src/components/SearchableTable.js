@@ -59,7 +59,6 @@ export default class SearchableTable extends Component {
     }
 
     render() {
-        console.log(this.props.options);
         return (<React.Fragment>
             <Row>
                 <Col>

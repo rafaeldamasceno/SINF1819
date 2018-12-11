@@ -21,7 +21,7 @@ export default class SearchableTableCheckbox extends Component {
   showRow(row) {
     let children = [];
     if (this.props.options.link)
-      children.push(<th scope="row"><Link to={this.props.options.link}>{row[0]}</Link></th>);
+      children.push(<th scope="row"><Link to={this.props.options.link+"?id=" + row[0]}>{row[0]}</Link></th>);
     let i = 1;
     for (; i < row.length; i++) {
       children.push(<td>{row[i]}</td>);
