@@ -8,6 +8,14 @@ import {
 import { Link } from 'react-router-dom';
 
 export default class SearchableTableCheckbox extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+        checkedOrders: [],
+    };
+    this.handleChange = this.handleChange.bind(this);
+}
   showHeaders() {
     let children = [];
     let i = 0;
@@ -15,6 +23,7 @@ export default class SearchableTableCheckbox extends Component {
       children.push(<th>{this.props.headers[i].name}</th>);
     }
     children.push(<th className='text-center'>{this.props.headers[i].name}</th>);
+    
     return children
   }
 
@@ -26,7 +35,7 @@ export default class SearchableTableCheckbox extends Component {
     for (; i < row.length; i++) {
       children.push(<td>{row[i]}</td>);
     }
-    children.push(<td className='text-center pl-5'><Input type='checkbox'></Input></td>)
+    children.push(<td className='text-center pl-5'><Input type='checkbox' onChange = {this.handleChange} name = {row[0]}></Input></td>)
     return children
   }
 
@@ -35,6 +44,7 @@ export default class SearchableTableCheckbox extends Component {
     for (const row of this.props.data) {
       tr.push(<tr>{this.showRow(row)}</tr>);
     }
+    
     return tr;
   }
 
@@ -53,6 +63,27 @@ export default class SearchableTableCheckbox extends Component {
     }
   }
 
+  handleChange(event){
+     if(event.target.checked){
+      let copy = this.state.checkedOrders;
+      copy.push(event.target.name);
+      this.setState({
+        checkedOrders:copy
+      })
+    }else{
+      let copy =  this.state.checkedOrders;
+      let index = copy.indexOf(event.target.name);
+      if(index > -1){
+        copy.splice(index,1);
+      }
+      this.setState({
+        checkedOrders:copy
+      })
+    }
+
+    this.props.checkedHandler(this.state.checkedOrders);
+  }
+
   render() {
     return (<React.Fragment>
       <Row>
@@ -61,6 +92,7 @@ export default class SearchableTableCheckbox extends Component {
         </Col>
         {this.showSearch()}
       </Row>
+      <form onSubmit={this.handleSubmit}>
       <Table striped>
         <thead>
           <tr>
@@ -71,6 +103,7 @@ export default class SearchableTableCheckbox extends Component {
           {this.showTable()}
         </tbody>
       </Table>
+      </form>
     </React.Fragment>
     )
   }
