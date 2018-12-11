@@ -6,7 +6,7 @@ import {
     Button,
 } from 'reactstrap';
 import SearchableTable from "./SearchableTable";
-import { supplierOrderContent, getUrlVars } from '../utils';
+import { supplierOrderInfoContent, getUrlVars, supplierOrderContent, errorMessage } from '../utils';
 
 export default class SupplierOrderContent extends Component {
     constructor(props) {
@@ -22,11 +22,12 @@ export default class SupplierOrderContent extends Component {
                 link: false,
                 search: true
             },
-            updated: false
+            updated: false,
+            error: false
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         let id = getUrlVars()['id'];
         let copy = Object.assign({}, this.state.orderInfo);
         copy.ID = id;
@@ -36,33 +37,50 @@ export default class SupplierOrderContent extends Component {
         if (!this.state.updated) {
             if (this.props !== undefined) {
                 if (this.props.authentication !== undefined) {
-                    supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length))
-                        .then(r => r.json())
-                        .then(r => { this.setStateOrderInfo(r) })
+                    this.setState({
+                        updated: true
+                    })
+                    let r = await supplierOrderInfoContent(this.props.authentication, id[0], id.substring(1, id.length))
+                    r = await r.json();
+                    this.setStateOrderInfo(r);
+
+                    r = await supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
+                    r = await r.json();
+                    this.setStateOrderContent(r);
                 }
             }
         }
 
     }
 
-    componentDidUpdate() {
-          //know if i already updated
+    async componentDidUpdate() {
+        //know if i already updated
         if (!this.state.updated) {
-          if (this.props !== undefined) {
+              if (this.props !== undefined) {
                 if (this.props.authentication !== undefined) {
                     let id = this.state.orderInfo.ID;
-                    supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length))
-                        .then(r => r.json())
-                        .then(r => { this.setStateOrderInfo(r) })
-                        .then(this.setState({
-                            updated: true
-                        }))
+                    this.setState({
+                        updated: true
+                    })
+                    let r = await supplierOrderInfoContent(this.props.authentication, id[0], id.substring(1, id.length))
+                    r = await r.json();
+                    this.setStateOrderInfo(r);
+
+                    r = await supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
+                    r = await r.json();
+                    this.setStateOrderContent(r);
                 }
             }
         }
     }
 
     setStateOrderInfo(response) {
+        if (!response.DataSet) {
+              this.setState({
+                error: true
+            });
+            return;
+        }
         //building state with response     
         let info = response.DataSet.Table[0];
         let ID = info['OrderId'];
@@ -71,10 +89,34 @@ export default class SupplierOrderContent extends Component {
         let supplier = info['Nome'];
         let total = info['PrecoTotal'] + "€";
 
-        let orderInfo = {ID,arrivalDate,supplier,total};
-        
+        let orderInfo = { ID, arrivalDate, supplier, total };
+
         this.setState({
             orderInfo: orderInfo
+        })
+    }
+
+    setStateOrderContent(response) {
+        if (!response.DataSet) {
+            this.setState({
+                error: true
+            });
+            return;
+        }
+        let a = [];
+        //building state with response
+        for (let i = 0; i < response.DataSet.Table.length; i++) {
+            let lineInfo = response.DataSet.Table[i];
+            let code = lineInfo['Artigo'];
+            let description = lineInfo['Descricao'];
+            let location = lineInfo['DescricaoLocalizacao'];
+            let quantity = lineInfo['Quantidade'];
+            let line = [code, description, location, quantity];
+            a.push(line);
+        }
+
+        this.setState({
+            tableData: a,
         })
     }
 
@@ -83,6 +125,7 @@ export default class SupplierOrderContent extends Component {
     render() {
         return (
             <Container>
+                {errorMessage(this.state.error)}
                 <Row>
                     <Col>
                         <h1>Supplier order info</h1>

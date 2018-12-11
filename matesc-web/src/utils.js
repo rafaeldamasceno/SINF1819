@@ -1,3 +1,8 @@
+import React from 'react';
+import {
+    Alert,
+  } from 'reactstrap';
+
 export const API_URL = 'http://localhost:2018/WebApi';
 
 export function makeRequestBody(body) {
@@ -57,7 +62,7 @@ export function unprocessedSuppliersOrdersFetch(authentication){
     });
 }
 
-export function supplierOrderContent(authentication, Doc_Serie, Doc_Number){
+export async function supplierOrderInfoContent(authentication, Doc_Serie, Doc_Number){
     return fetch(`${API_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
@@ -65,6 +70,26 @@ export function supplierOrderContent(authentication, Doc_Serie, Doc_Number){
         )
     });
 }
+
+export function supplierOrderContent(authentication, Doc_Serie, Doc_Number){
+    return fetch(`${API_URL}/Administrador/Consulta`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body:JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigos.* FROM ArmazemLocalizacoes INNER JOIN (SELECT LC.Artigo, LC.Descricao, LC.Localizacao, LC.Quantidade FROM LinhasCompras LC INNER JOIN CabecCompras CC ON LC.IdCabecCompras = CC.Id WHERE CC.Serie = '${Doc_Serie}' AND CC.NumDoc = ${Doc_Number} AND CC.TipoDoc = 'ECF') as Artigos ON ArmazemLocalizacoes.Localizacao = Artigos.Localizacao`
+        )
+    });
+}
+
+export function errorMessage(error){
+    if(error){
+        return(
+            <Alert color = "danger"> Erro do Primavera</Alert>
+        )
+    }
+}
+
+
+
 export function loadItems(authentication) {
     return fetch(`${API_URL}/Base/Artigos/LstArtigos`, {
         headers: makeHeaders(authentication)
