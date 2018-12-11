@@ -7,6 +7,7 @@ import {
 } from 'reactstrap';
 
 import SearchableTable from "./SearchableTable";
+import { itemsInStock, itemsOutOfStock, errorMessage } from '../utils';
 
 export default class Warehouse extends Component {
 
@@ -28,11 +29,88 @@ export default class Warehouse extends Component {
             options:{
                 link:false,
                 search:false 
-            }
+            },
+            updated:false,
+            error:false
         };
     }
+
+    async componentDidUpdate() {
+        //know if i already updated
+        if (!this.state.updated) {
+              if (this.props !== undefined) {
+                if (this.props.authentication !== undefined) {
+                    this.setState({
+                        updated: true
+                    })
+                    let r = await itemsInStock(this.props.authentication);
+                    r = await r.json();
+                    this.setStateItemsInStock(r);
+
+                    r = await itemsOutOfStock(this.props.authentication);
+                    r = await r.json();
+                    this.setStateItemsOutOfStock(r);
+                }
+            }
+        }
+    }
+
+    setStateItemsInStock(response) {        
+        if (!response.DataSet) {
+              this.setState({
+                error: true
+            });
+            return;
+        }
+        let a = [];
+        //building state with response
+        for (let i = 0; i < response.DataSet.Table.length; i++) {
+            let lineInfo = response.DataSet.Table[i];
+            let code = lineInfo['Artigo'];
+            let name = lineInfo['Nome'];
+            let location = lineInfo['DescricaoLocalizacao'];
+            let quantity = lineInfo['StkActual'];
+            let line = [code, name, location, quantity];
+            a.push(line);
+        }
+        let copy = Object.assign({}, this.state.tableInStock);
+        copy.tableData = a;
+
+        this.setState({
+            tableInStock: copy
+        })
+    }
+
+    setStateItemsOutOfStock(response) {
+        if (!response.DataSet) {
+            this.setState({
+              error: true
+          });
+          return;
+      }
+      let a = [];
+      //building state with response
+      for (let i = 0; i < response.DataSet.Table.length; i++) {
+          let lineInfo = response.DataSet.Table[i];
+          let code = lineInfo['Artigo'];
+          let name = lineInfo['Nome'];
+          let location = lineInfo['DescricaoLocalizacao'];
+          let line = [code, name, location];
+          a.push(line);
+      }
+      let copy = Object.assign({}, this.state.tableOutOfStock);
+      copy.tableData = a;
+
+      this.setState({
+        tableOutOfStock: copy
+      })
+    }
+
+
+
     render() {
         return <Container>
+             {errorMessage(this.state.error)}
             <Row>
               <Col xs="0" className="ml-auto">
                 <Input type="text" placeholder="Search all products" />

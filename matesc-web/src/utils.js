@@ -98,6 +98,25 @@ export function clientOrderContent(authentication, Doc_Serie, Doc_Number){
     });
 }
 
+export function itemsInStock(authentication){
+    return fetch(`${API_URL}/Administrador/Consulta`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body:JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, ArtigoArmazem.* FROM ArmazemLocalizacoes INNER JOIN (SELECT Inv.Artigo, A.Descricao as Nome, Inv.Localizacao as Localizacao, ISNULL(Inv.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem Inv INNER JOIN Artigo A ON Inv.Artigo = A.Artigo WHERE Inv.StkActual IS NOT NULL AND Inv.StkActual > 0) as ArtigoArmazem ON ArmazemLocalizacoes.Localizacao = ArtigoArmazem.Localizacao`
+        )
+    });
+}
+
+export function itemsOutOfStock(authentication){
+    return fetch(`${API_URL}/Administrador/Consulta`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body:JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, ArtigoArmazem.* FROM ArmazemLocalizacoes INNER JOIN (SELECT Inv.Artigo, A.Descricao as Nome, Inv.Localizacao as Localizacao, ISNULL(Inv.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem Inv INNER JOIN Artigo A ON Inv.Artigo = A.Artigo WHERE Inv.StkActual IS NULL OR Inv.StkActual = 0) as ArtigoArmazem ON ArmazemLocalizacoes.Localizacao = ArtigoArmazem.Localizacao`
+        )
+    });
+}
+
+
 export function errorMessage(error){
     if(error){
         return(
