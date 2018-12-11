@@ -24,33 +24,33 @@ export default class SupplierOrders extends Component {
         };
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         if(!this.state.updated){
             if(this.props){
                 if(this.props.authentication){
-                    unprocessedSuppliersOrdersFetch(this.props.authentication)
-                    .then(r => r.json())
-                    .then(r => {this.setStateTableData(r)})
-                    .then(this.setState({
+                    let r = await unprocessedSuppliersOrdersFetch(this.props.authentication)
+                    r = await r.json();
+                    this.setStateTableData(r);
+                    this.setState({
                         updated:true
-                    }))
+                    })
                 }
             } 
         }            
         
     }
 
-    componentDidUpdate(){
+    async componentDidUpdate(){
       
         //know if i already updated
         if(!this.state.updated){
             if(this.props.authentication){
-                unprocessedSuppliersOrdersFetch(this.props.authentication)
-                .then(r => r.json())
-                .then(r => {this.setStateTableData(r)})
-                .then(this.setState({
+                let r = await unprocessedSuppliersOrdersFetch(this.props.authentication)
+                r = await r.json();
+                this.setStateTableData(r);
+                this.setState({
                     updated:true
-                }))
+                })
             }
         }
     }

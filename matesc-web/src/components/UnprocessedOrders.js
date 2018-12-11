@@ -5,12 +5,12 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
-import {unprocessedClientOrdersFetch} from '../utils';
+import { unprocessedClientOrdersFetch } from '../utils';
 
 export default class UnprocessedOrders extends Component {
 
     constructor(props) {
-        super(props);    
+        super(props);
         this.state = {
             title: "Client Orders",
             headers: [{ name: "Order ID" }, { name: "Client" }, { name: "Deadline" }, { name: "Include" }],
@@ -24,50 +24,50 @@ export default class UnprocessedOrders extends Component {
         };
     }
 
-    componentDidMount(){
-        if(!this.state.updated){
-            if(this.props !== undefined){
-                if(this.props.authentication !== undefined){
-                    unprocessedClientOrdersFetch(this.props.authentication)
-                    .then(r => r.json())
-                    .then(r => {this.setStateTableData(r)})
-                    .then(this.setState({
-                        updated:true
-                    }))
+    async componentDidMount() {
+        if (!this.state.updated) {
+            if (this.props !== undefined) {
+                if (this.props.authentication !== undefined) {
+                    let r = await unprocessedClientOrdersFetch(this.props.authentication);
+                    r = await r.json();
+                    this.setStateTableData(r);
+                    this.setState({
+                        updated: true
+                    })
                 }
-            }  
+            }
         }
-                  
-        
+
+
     }
 
-    componentDidUpdate(){
+    async componentDidUpdate() {
         //know if i already updated
-        if(!this.state.updated){
-            if(this.props.authentication !== undefined){
-                unprocessedClientOrdersFetch(this.props.authentication)
-                .then(r => r.json())
-                .then(r => {this.setStateTableData(r)})
-                .then(this.setState ({
+        if (!this.state.updated) {
+            if (this.props.authentication !== undefined) {
+                let r = await unprocessedClientOrdersFetch(this.props.authentication);
+                r = await r.json();
+                this.setStateTableData(r);
+                this.setState({
                     updated: true
-                }))
+                })
             }
         }
     }
 
-    setStateTableData(response){        
-       let a = [];
-       //building state with response
+    setStateTableData(response) {
+        let a = [];
+        //building state with response
         for (let i = 0; i < response.DataSet.Table.length; i++) {
-                let data = response.DataSet.Table[i]['Data'];
-                data = data.replace("T", " ");
-                let line = [response.DataSet.Table[i]['OrderId'],response.DataSet.Table[i]['Nome'],data];
-                a.push(line);
+            let data = response.DataSet.Table[i]['Data'];
+            data = data.replace("T", " ");
+            let line = [response.DataSet.Table[i]['OrderId'], response.DataSet.Table[i]['Nome'], data];
+            a.push(line);
         }
 
-       this.setState({
-          data: a,
-        }) 
+        this.setState({
+            data: a,
+        })
     }
 
 
