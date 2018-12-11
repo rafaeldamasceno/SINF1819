@@ -72,12 +72,6 @@ class App extends Component {
                 <NavItem>
                   <Link to='/warehouse'><NavLink>Warehouse</NavLink></Link>
                 </NavItem>
-                <NavItem>
-                  <Link to='/items'><NavLink>Items</NavLink></Link>
-                </NavItem>
-                <NavItem>
-                  <Link to='/clients'><NavLink>Clients</NavLink></Link>
-                </NavItem>
               </Nav>
             </Collapse>
           </Navbar>
