@@ -7,7 +7,21 @@ import {
     Button
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+/*
+props{
+    headers: array of the headers of the table
+    data: matrix of the table data
+    title: title of the table
+    options:{
+        link: destination link of the first columns(ids) href=prop.options.link+row[0]
+        search: shows or not the search field
+        print: shows or not the print field
+        searchInput: only shows rows with that word (used to be able to search words from parents, search should be false)
+    }
+}
 
+}
+*/
 export default class SearchableTable extends Component {
     constructor(props) {
         super(props);
@@ -15,6 +29,12 @@ export default class SearchableTable extends Component {
             searchInput: "",
         };
         this.searchInputUpdateHandle = this.searchInputUpdateHandle.bind(this);
+    }
+
+    componentDidUpdate(){
+        if (this.state.searchInput !== this.props.options.searchInput) {
+            this.setState({ searchInput: this.props.options.searchInput });
+        } 
     }
 
     showHeaders(){      
@@ -28,7 +48,6 @@ export default class SearchableTable extends Component {
     rowContainsWord(row,input){
         for (let rowField of row) {
             rowField = rowField.toLowerCase();
-            console.log(rowField);
             
             //if field contains input
             if(rowField.search(input) > -1){
@@ -41,7 +60,11 @@ export default class SearchableTable extends Component {
     showRow(row) {
         if (!this.rowContainsWord(row, this.state.searchInput))
             return;
-        
+
+        if (this.props.filterWord){
+            if (!this.rowContainsWord(row, this.props.filterWord))
+                return;
+        }
         let children = [];
         if(this.props.options.link)
             children.push(<th scope="row"><Link to={this.props.options.link}>{row[0]}</Link></th>)
