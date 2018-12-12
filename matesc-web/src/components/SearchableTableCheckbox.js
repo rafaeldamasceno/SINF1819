@@ -15,7 +15,8 @@ export default class SearchableTableCheckbox extends Component {
         checkedOrders: [],
     };
     this.handleChange = this.handleChange.bind(this);
-}
+  }
+  
   showHeaders() {
     let children = [];
     let i = 0;
