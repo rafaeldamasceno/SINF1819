@@ -12,9 +12,11 @@ export default class SearchableTableCheckbox extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        checkedOrders: [],
+      checkedOrders: [],
+      searchInput: "",
     };
     this.handleChange = this.handleChange.bind(this);
+    this.searchInputUpdateHandle = this.searchInputUpdateHandle.bind(this);
   }
   
   showHeaders() {
@@ -28,7 +30,23 @@ export default class SearchableTableCheckbox extends Component {
     return children
   }
 
+  rowContainsWord(row, input) {
+    for (let rowField of row) {
+      rowField = rowField.toLowerCase();
+
+      //if field contains input
+      if (rowField.search(input) > -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   showRow(row) {
+
+    if(!this.rowContainsWord(row,this.state.searchInput))
+      return;
+
     let children = [];
     if (this.props.options.link)
       children.push(<th scope="row"><Link to={this.props.options.link+"?id=" + row[0]}>{row[0]}</Link></th>);
@@ -58,10 +76,14 @@ export default class SearchableTableCheckbox extends Component {
     else {
       return (
         <Col xs='0' className='ml-auto'>
-          <Input type='text' placeholder='Search'></Input>
+          <Input type='text' placeholder='Search' onChange={this.searchInputUpdateHandle}></Input>
         </Col>
       )
     }
+  }
+
+  searchInputUpdateHandle(event) {
+    this.setState({ searchInput: event.target.value.toLowerCase() });
   }
 
   handleChange(event){

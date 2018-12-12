@@ -39,8 +39,6 @@ export default class SearchableTable extends Component {
     }
 
     showRow(row) {
-        console.log(this.state.searchInput);
-        console.log(row);
         if (!this.rowContainsWord(row, this.state.searchInput))
             return;
         
