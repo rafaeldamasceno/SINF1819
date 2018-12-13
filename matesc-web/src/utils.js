@@ -75,7 +75,7 @@ export function supplierOrderContent(authentication, Doc_Serie, Doc_Number){
     return fetch(`${API_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body:JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigos.* FROM ArmazemLocalizacoes INNER JOIN (SELECT LC.Artigo, LC.Descricao, LC.Localizacao, LC.Quantidade FROM LinhasCompras LC INNER JOIN CabecCompras CC ON LC.IdCabecCompras = CC.Id WHERE CC.Serie = '${Doc_Serie}' AND CC.NumDoc = ${Doc_Number} AND CC.TipoDoc = 'ECF') as Artigos ON ArmazemLocalizacoes.Localizacao = Artigos.Localizacao`
+        body:JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigos.* FROM ArmazemLocalizacoes INNER JOIN (SELECT ArtigosLinhas.*, (Artigo.Peso * ArtigosLinhas.Quantidade) as PesoTotal, (Artigo.Volume * ArtigosLinhas.Quantidade) as VolumeTotal, Artigo.Peso as PesoUnit, Artigo.Volume as VolumeUnit FROM Artigo INNER JOIN (SELECT LC.Artigo, LC.Descricao, LC.Localizacao, LC.Quantidade FROM LinhasCompras LC INNER JOIN CabecCompras CC ON LC.IdCabecCompras = CC.Id WHERE CC.Serie = '${Doc_Serie}' AND CC.NumDoc = ${Doc_Number} AND CC.TipoDoc = 'ECF') as ArtigosLinhas ON ArtigosLinhas.Artigo = Artigo.Artigo) as Artigos ON ArmazemLocalizacoes.Localizacao = Artigos.Localizacao`
         )
     });
 }
@@ -93,7 +93,7 @@ export function clientOrderContent(authentication, Doc_Serie, Doc_Number){
     return fetch(`${API_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body:JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigos.* FROM ArmazemLocalizacoes INNER JOIN (SELECT LD.Artigo, LD.Descricao, LD.Localizacao, LD.Quantidade FROM LinhasDoc LD INNER JOIN CabecDoc CD ON LD.IdCabecDoc = CD.Id WHERE CD.Serie = '${Doc_Serie}' AND CD.NumDoc = ${Doc_Number} AND CD.TipoDoc = 'ECL') as Artigos ON ArmazemLocalizacoes.Localizacao = Artigos.Localizacao`
+        body:JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigos.* FROM ArmazemLocalizacoes INNER JOIN (SELECT ArtigosLinhas.*, (Artigo.Peso * ArtigosLinhas.Quantidade) as PesoTotal, (Artigo.Volume * ArtigosLinhas.Quantidade) as VolumeTotal, Artigo.Peso as PesoUnit, Artigo.Volume as VolumeUnit FROM Artigo INNER JOIN (SELECT LD.Artigo, LD.Descricao, LD.Localizacao, LD.Quantidade FROM LinhasDoc LD INNER JOIN CabecDoc CD ON LD.IdCabecDoc = CD.Id WHERE CD.Serie = '${Doc_Serie}' AND CD.NumDoc = ${Doc_Number} AND CD.TipoDoc = 'ECL') as ArtigosLinhas ON ArtigosLinhas.Artigo = Artigo.Artigo) as Artigos ON ArmazemLocalizacoes.Localizacao = Artigos.Localizacao`
         )
     });
 }
