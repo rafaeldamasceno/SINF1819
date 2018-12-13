@@ -13,7 +13,7 @@ db.defaults({
 	resupplyWaves:[]
 }).write()
 
-app.get('/picking-wave', (req, res) => 
+app.post('/picking-wave', (req, res) => 
 	{
 		let results = {}
 		results.waveId = db.get('pickingWaves').size().value() + 1
@@ -21,7 +21,7 @@ app.get('/picking-wave', (req, res) =>
 		res.send(results)
 	})
 	
-app.get('/resupply-wave', (req, res) => 
+app.post('/resupply-wave', (req, res) => 
 	{
 		let results = {}
 		results.waveId = db.get('resupplyWaves').size().value() + 1
