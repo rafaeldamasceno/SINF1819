@@ -5,7 +5,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
-import { unprocessedClientOrdersFetch } from '../utils';
+import { unprocessedClientOrdersFetch, createPickingWave, clientOrderContent } from '../utils';
 
 export default class UnprocessedOrders extends Component {
 
@@ -23,6 +23,7 @@ export default class UnprocessedOrders extends Component {
             updated: false
         };
         this.checkedHandler = this.checkedHandler.bind(this);
+        this.preparePickingWave = this.preparePickingWave.bind(this);
     }
 
     async componentDidMount() {
@@ -78,11 +79,36 @@ export default class UnprocessedOrders extends Component {
         });  
     }
 
+    async preparePickingWave() {
+
+        if(!this.state.checkedOrders) {
+            return;
+        }
+
+        if(this.state.checkedOrders.length === 0) {
+            return;
+        } 
+
+        let orders = [];
+
+        for(let i = 0; i < this.state.checkedOrders.length; i++) {
+            let id = this.state.checkedOrders[i];
+
+            let items = await clientOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
+            items = await items.json();
+
+            orders.push(items.DataSet.Table);
+        }
+
+        let pickingList = await createPickingWave(orders);
+        console.log(await pickingList.json());
+    }
+
     render() {
         return <Container>
             <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler = {this.checkedHandler} />
             <Link to="/picking-list">
-                <Button outline color="primary" size="lg" className="float-right">
+                <Button outline color="primary" size="lg" className="float-right" onClick={this.preparePickingWave}>
                     Create picking wave
               </Button>
             </Link>
