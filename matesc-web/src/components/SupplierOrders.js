@@ -22,6 +22,7 @@ export default class SupplierOrders extends Component {
             },
             updated: false
         };
+        this.checkedHandler = this.checkedHandler.bind(this);
     }
 
     async componentDidMount(){
@@ -41,7 +42,6 @@ export default class SupplierOrders extends Component {
     }
 
     async componentDidUpdate(){
-      
         //know if i already updated
         if(!this.state.updated){
             if(this.props.authentication){
@@ -71,11 +71,16 @@ export default class SupplierOrders extends Component {
         }) 
     }
 
+    checkedHandler(checkedOrders){
+        this.setState({
+            checkedOrders : checkedOrders
+        });  
+    }
 
     render() {
         return (
         <Container>
-            <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} />
+            <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler = {this.checkedHandler} />
             <Link to='/replenishment-list'><Button outline color='primary' size='lg' className='float-right'>Put items away</Button></Link>
         </Container>)
     }

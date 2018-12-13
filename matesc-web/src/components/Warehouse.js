@@ -29,11 +29,13 @@ export default class Warehouse extends Component {
             },
             options: {
                 link: false,
-                search: false
+                search: false,
+                searchInput: ""
             },
             updated: false,
             error: false
         };
+        this.searchInputUpdateHandle = this.searchInputUpdateHandle.bind(this);
     }
     async componentDidMount() {
         if (!this.state.updated) {
@@ -56,7 +58,7 @@ export default class Warehouse extends Component {
 
     }
     async componentDidUpdate() {
-        //know if i already updated
+        //know if i already updated        
         if (!this.state.updated) {
             if (this.props !== undefined) {
                 if (this.props.authentication !== undefined) {
@@ -126,14 +128,18 @@ export default class Warehouse extends Component {
         })
     }
 
-
+    searchInputUpdateHandle(event){
+        let copy = Object.assign({}, this.state.options);
+        copy.searchInput = event.target.value.toLowerCase()
+        this.setState({options: copy});
+    }
 
     render() {
         return <Container>
             {errorMessage(this.state.error)}
             <Row>
                 <Col xs="0" className="ml-auto">
-                    <Input type="text" placeholder="Search all products" />
+                    <Input type="text" placeholder="Search all products" onChange={this.searchInputUpdateHandle}/>
                 </Col>
             </Row>
             <SearchableTable options={this.state.options} title={this.state.tableInStock.title} headers={this.state.tableInStock.tableHeaders} data={this.state.tableInStock.tableData} />

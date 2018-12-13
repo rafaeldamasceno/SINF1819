@@ -120,7 +120,6 @@ export default class ClientOrderContent extends Component {
         })
     }
 
-
     render() {
         return (
         <Container>

@@ -22,6 +22,7 @@ export default class UnprocessedOrders extends Component {
             },
             updated: false
         };
+        this.checkedHandler = this.checkedHandler.bind(this);
     }
 
     async componentDidMount() {
@@ -53,6 +54,7 @@ export default class UnprocessedOrders extends Component {
                 })
             }
         }
+       
     }
 
     setStateTableData(response) {
@@ -70,11 +72,15 @@ export default class UnprocessedOrders extends Component {
         })
     }
 
-
+    checkedHandler(checkedOrders){
+        this.setState({
+            checkedOrders : checkedOrders
+        });  
+    }
 
     render() {
         return <Container>
-            <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} />
+            <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler = {this.checkedHandler} />
             <Link to="/picking-list">
                 <Button outline color="primary" size="lg" className="float-right">
                     Create picking wave
