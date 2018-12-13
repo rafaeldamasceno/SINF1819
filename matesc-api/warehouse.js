@@ -186,7 +186,16 @@ function getPath(nodes) {
 	return bestPath
 }
 
+function splitWaves(items, maxWeight, maxVolume) {
+	let splitWaves = [];
+
+	
+	
+	return splitWaves;
+}
+
 module.exports = {
 	graph: warehouse,
-	getPath: getPath
+	getPath: getPath,
+	splitWaves: splitWaves
 }
