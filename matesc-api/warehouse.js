@@ -2,18 +2,18 @@ const graph = require('node-dijkstra')
 const warehouse = new graph()
 
 warehouse.addNode('PC', {
-    '11': 1,
-    '21': 1,
-    '31': 1,
-    '41': 1,
-    '51': 1,
+	'11': 1,
+	'21': 1,
+	'31': 1,
+	'41': 1,
+	'51': 1,
 })
 
 warehouse.addNode('11', {
-    'PC': 1,
-    '12': 1,
-    '21': 1,
-    '22': 1
+	'PC': 1,
+	'12': 1,
+	'21': 1,
+	'22': 1
 })
 
 warehouse.addNode('12', {
@@ -135,4 +135,58 @@ warehouse.addNode('53', {
 	'52': 1
 })
 
-module.exports = warehouse
+function perm(xs) {
+	let ret = [];
+
+	for (let i = 0; i < xs.length; i = i + 1) {
+		let rest = perm(xs.slice(0, i).concat(xs.slice(i + 1)));
+
+		if (!rest.length) {
+			ret.push([xs[i]])
+		} else {
+			for (let j = 0; j < rest.length; j = j + 1) {
+				ret.push([xs[i]].concat(rest[j]))
+			}
+		}
+	}
+	return ret;
+}
+
+function getPath(nodes) {
+	nodes.push('PC')
+
+	let paths = {}
+
+	for (let i = 0; i < nodes.length; i++) {
+		for (let j = i + 1; j < nodes.length; j++) {
+			paths[`${nodes[i]}-${nodes[j]}`] = warehouse.path(nodes[i], nodes[j], { cost: true })
+			paths[`${nodes[j]}-${nodes[i]}`] = warehouse.path(nodes[j], nodes[i], { cost: true })
+		}
+	}
+
+	nodes.pop()
+
+	let perms = perm(nodes)
+	let minimumCost = Number.MAX_SAFE_INTEGER
+	let bestPath = []
+
+	perms.forEach(perm => {
+		let cost = 0
+		cost += paths[`PC-${perm[0]}`]['cost']
+		for (let i = 0; i < perm.length - 1; i++) {
+			cost += paths[`${perm[i]}-${perm[i + 1]}`]['cost']
+		}
+		cost += paths[`${perm[perm.length - 1]}-PC`]['cost']
+		if (cost < minimumCost) {
+			minimumCost = cost
+			bestPath = perm
+		}
+	})
+
+	return bestPath
+}
+
+module.exports = {
+	graph: warehouse,
+	getPath: getPath
+}
