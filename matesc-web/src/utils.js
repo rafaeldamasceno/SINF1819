@@ -117,6 +117,13 @@ export function createPickingWave(orders) {
     })
 }
 
+export function createReplenishmentWave(orders) {
+    return fetch(`${MATESC_URL}/resupply-wave`, {
+        method: 'POST',
+        body:JSON.stringify(orders)
+    })
+}
+
 
 export function errorMessage(error){
     if(error){
