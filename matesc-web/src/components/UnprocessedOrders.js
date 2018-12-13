@@ -101,7 +101,7 @@ export default class UnprocessedOrders extends Component {
         }
 
         let pickingList = await createPickingWave(orders);
-        console.log(await pickingList);
+        console.log(await pickingList.json());
     }
 
     render() {
