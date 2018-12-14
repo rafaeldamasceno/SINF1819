@@ -31,44 +31,50 @@ export default class SearchableTable extends Component {
         this.searchInputUpdateHandle = this.searchInputUpdateHandle.bind(this);
     }
 
-    componentDidUpdate(){
-        if (this.state.searchInput !== this.props.options.searchInput) {
-            this.setState({ searchInput: this.props.options.searchInput });
-        } 
+    componentDidUpdate() {
+        if (typeof this.props.options.searchInput !== 'undefined') {        
+            if (this.state.searchInput !== this.props.options.searchInput) {
+                this.setState({ searchInput: this.props.options.searchInput });
+            }
+        }
     }
 
-    showHeaders(){      
-        let children =[];
-        for (const header of this.props.headers) {            
+    showHeaders() {
+        let children = [];
+        for (const header of this.props.headers) {
             children.push(<th>{header.name}</th>);
-        } 
+        }
         return children
     }
 
-    rowContainsWord(row,input){
+    rowContainsWord(row, input) {
+
         for (let rowField of row) {
+            rowField += "";
             rowField = rowField.toLowerCase();
-            
+
             //if field contains input
-            if(rowField.search(input) > -1){
+            if (rowField.search(input) > -1) {
                 return true;
-            } 
+            }
         }
         return false;
     }
 
     showRow(row) {
-        if (!this.rowContainsWord(row, this.state.searchInput))
-            return;
+        if (!this.rowContainsWord(row, this.state.searchInput)) {
+             return;
+        }
 
-        if (this.props.filterWord){
+
+        if (this.props.filterWord) {
             if (!this.rowContainsWord(row, this.props.filterWord))
                 return;
         }
         let children = [];
-        if(this.props.options.link)
+        if (this.props.options.link)
             children.push(<th scope="row"><Link to={this.props.options.link}>{row[0]}</Link></th>)
-        else{
+        else {
             children.push(<th scope="row">{row[0]}</th>)
         }
         for (let i = 1; i < row.length; i++) {
@@ -77,7 +83,7 @@ export default class SearchableTable extends Component {
         return children
     }
 
-    showTable(){
+    showTable() {
         let tr = [];
         for (const row of this.props.data) {
             tr.push(<tr>{this.showRow(row)}</tr>);
@@ -85,12 +91,12 @@ export default class SearchableTable extends Component {
         return tr;
     }
 
-    searchInputUpdateHandle(event){
-        this.setState({searchInput: event.target.value.toLowerCase()});
+    searchInputUpdateHandle(event) {
+        this.setState({ searchInput: event.target.value.toLowerCase() });
     }
 
-    showSearch(){
-        if(this.props.options.search){
+    showSearch() {
+        if (this.props.options.search) {
             return (
                 <Col xs='0' className='ml-auto'>
                     <Input type='text' placeholder='Search' onChange={this.searchInputUpdateHandle}></Input>
@@ -99,11 +105,11 @@ export default class SearchableTable extends Component {
         }
     }
 
-    showPrint(){
-        if (this.props.options.print){
-            return(
+    showPrint() {
+        if (this.props.options.print) {
+            return (
                 <Col xs='1' className='ml-auto mr-2'>
-                   <Button><i class="fas fa-print"></i> Print</Button>
+                    <Button><i class="fas fa-print"></i> Print</Button>
                 </Col>
             )
         }
@@ -128,7 +134,7 @@ export default class SearchableTable extends Component {
                     {this.showTable()}
                 </tbody>
             </Table>
-            </React.Fragment>
-            )
+        </React.Fragment>
+        )
     }
 }

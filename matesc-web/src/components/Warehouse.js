@@ -128,10 +128,10 @@ export default class Warehouse extends Component {
         })
     }
 
-    searchInputUpdateHandle(event){
+    searchInputUpdateHandle(event) {
         let copy = Object.assign({}, this.state.options);
         copy.searchInput = event.target.value.toLowerCase()
-        this.setState({options: copy});
+        this.setState({ options: copy });
     }
 
     render() {
@@ -139,7 +139,7 @@ export default class Warehouse extends Component {
             {errorMessage(this.state.error)}
             <Row>
                 <Col xs="0" className="ml-auto">
-                    <Input type="text" placeholder="Search all products" onChange={this.searchInputUpdateHandle}/>
+                    <Input type="text" placeholder="Search all products" onChange={this.searchInputUpdateHandle} />
                 </Col>
             </Row>
             <SearchableTable options={this.state.options} title={this.state.tableInStock.title} headers={this.state.tableInStock.tableHeaders} data={this.state.tableInStock.tableData} />
