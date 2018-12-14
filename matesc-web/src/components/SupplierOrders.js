@@ -5,7 +5,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
-import {unprocessedSuppliersOrdersFetch, supplierOrderContent, createReplenishmentWave} from '../utils';
+import {unprocessedSuppliersOrdersFetch,createVGR,supplierOrderInfoContent} from '../utils';
 
 export default class SupplierOrders extends Component {
     constructor(props) {
@@ -13,7 +13,7 @@ export default class SupplierOrders extends Component {
 
         this.state = {
             title: "Supplier Orders",
-            headers:[{name:"Order ID"},{name:"Supplier"},{name:"Arrival Date"},{name: "Include"}],
+            headers:[{name:"Order ID"},{name:"Supplier"},{name:"Arrival Date"},{name: "Arrived"}],
             data: [["A27","Sociedade de fornecimento, Lda","21/02/2019"],
                 ["A14","Papalaco & Papeis","12/03/2019"],
                 ["A19","Recheio","30/01/2019"]],
@@ -23,7 +23,7 @@ export default class SupplierOrders extends Component {
             updated: false
         };
         this.checkedHandler = this.checkedHandler.bind(this);
-        this.prepareReplenishmentWave = this.prepareReplenishmentWave.bind(this);
+        this.prepareTransformDoc = this.prepareTransformDoc.bind(this);
     }
 
     async componentDidMount(){
@@ -78,7 +78,26 @@ export default class SupplierOrders extends Component {
         });  
     }
 
-    async prepareReplenishmentWave() {
+
+    async prepareTransformDoc(){
+        if(!this.state.checkedOrders) {
+            return;
+        }
+
+        if(this.state.checkedOrders.length === 0) {
+            return;
+        }
+
+        for(let i =0; i < this.state.checkedOrders.length; i++){
+            let id = this.state.checkedOrders[i];
+            let orderInfo = await supplierOrderInfoContent(this.props.authentication,id[0], id.substring(1, id.length)); 
+            let entity = await orderInfo.json();
+            entity = entity.DataSet.Table[0].Entidade;
+           let r = await createVGR(this.props.authentication,id[0], id.substring(1, id.length),entity);
+           
+        }
+    }
+   /* async prepareReplenishmentWave() {
         if(!this.state.checkedOrders) {
             return;
         }
@@ -100,13 +119,13 @@ export default class SupplierOrders extends Component {
 
         let replenishmentList = await createReplenishmentWave(orders);
         console.log(await replenishmentList.json());
-    }
+    }*/
 
     render() {
         return (
         <Container>
             <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler = {this.checkedHandler} />
-            <Link to='/replenishment-list'><Button outline color='primary' size='lg' className='float-right' onClick={this.prepareReplenishmentWave}>Put items away</Button></Link>
+            <Link to='/replenishment-list'><Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button></Link>
         </Container>)
     }
 }
