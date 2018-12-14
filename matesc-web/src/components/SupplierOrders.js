@@ -93,7 +93,7 @@ export default class SupplierOrders extends Component {
             let orderInfo = await supplierOrderInfoContent(this.props.authentication,id[0], id.substring(1, id.length)); 
             let entity = await orderInfo.json();
             entity = entity.DataSet.Table[0].Entidade;
-           let r = await createVGR(this.props.authentication,id[0], id.substring(1, id.length),entity);
+            await createVGR(this.props.authentication,id[0], id.substring(1, id.length),entity);
         }
     }
    /* async prepareReplenishmentWave() {
@@ -124,7 +124,7 @@ export default class SupplierOrders extends Component {
         return (
         <Container>
             <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler = {this.checkedHandler} />
-            <Link to='/replenishment-list'><Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button></Link>
+            <Link to='/produts-to-store'><Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button></Link>
         </Container>)
     }
 }

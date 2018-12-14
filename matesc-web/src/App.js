@@ -18,6 +18,7 @@ import Warehouse from './components/Warehouse';
 import SupplierOrders from './components/SupplierOrders';
 import ReplenishmentList from './components/ReplenishmentList';
 import SupplierOrderContent from './components/SupplierOrderContent';
+import ProductsToStore from './components/ProductsToStore';
 import Button from './components/Button';
 
 const AppContext = React.createContext();
@@ -88,6 +89,7 @@ class App extends Component {
             <Route path='/warehouse' render={() => <Warehouse authentication={this.state.authentication}/>} />
             <Route path='/replenishment-list' render={() => <ReplenishmentList authentication={this.state.authentication}/>} />
             <Route path='/button' render={Button} />
+            <Route path='/produts-to-store' render={() => <ProductsToStore authentication={this.state.authentication}/>} />
         </React.Fragment>
       </BrowserRouter>
       </AppProvider>
