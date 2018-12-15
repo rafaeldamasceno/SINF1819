@@ -4,6 +4,7 @@ import {
     Button
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
 import { unprocessedClientOrdersFetch, createPickingWave, clientOrderContent } from '../utils';
 
@@ -28,6 +29,8 @@ export default class UnprocessedOrders extends Component {
     }
 
     async componentDidMount() {
+        const cookies = new Cookies();
+        console.log(cookies.get('token')); // Pacman
         if (!this.state.updated) {
             if (this.props !== undefined) {
                 if (this.props.authentication !== undefined) {

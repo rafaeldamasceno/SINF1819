@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { authenticate } from './utils';
+import Cookies from 'universal-cookie';
 import {
   Collapse,
   Navbar,
@@ -51,7 +52,11 @@ class App extends Component {
   componentDidMount() {
     this.authPromise = authenticate()
       .then(response => response.json())
-      .then(data => this.setState({ authentication: data }));
+      .then(data => {
+        this.setState({ authentication: data });
+        const cookies = new Cookies();
+        cookies.set('token', data, { path: '/' }); 
+    });
   }
 
   render() {
