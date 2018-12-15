@@ -13,7 +13,7 @@ export default class SupplierOrders extends Component {
 
         this.state = {
             title: "Products to Reallocate",
-            headers:[{name:"Product ID"},{name:"Product Name"},{name:"Arrival Date"},{name: "Arrived"}],
+            headers:[{name:"Product ID"},{name:"Product Name"},{name:"Quantity"},{name: "Include"}],
             data: [["A27","Sociedade de fornecimento, Lda","21/02/2019"],
                 ["A14","Papalaco & Papeis","12/03/2019"],
                 ["A19","Recheio","30/01/2019"]],
