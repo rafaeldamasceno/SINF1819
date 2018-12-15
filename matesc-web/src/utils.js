@@ -16,13 +16,13 @@ export function makeRequestBody(body) {
     return formData;
 };
 
-export function authenticate() {
+export function authenticate(username, password) {
     return fetch(`${PRIMAVERA_URL}/token`, {
         method: 'POST',
         body: makeRequestBody(
             {
-                username: 'FEUP',
-                password: 'qualquer1',
+                username: username,
+                password: password,
                 company: 'MATESC',
                 instance: 'DEFAULT',
                 line: 'professional',
