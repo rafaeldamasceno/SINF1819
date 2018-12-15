@@ -30,7 +30,8 @@ export default class Warehouse extends Component {
             options: {
                 link: false,
                 search: false,
-                searchInput: ""
+                searchInput: "",
+                loading: true
             },
             updated: false,
             error: false
@@ -51,6 +52,9 @@ export default class Warehouse extends Component {
                     r = await itemsOutOfStock(this.props.authentication);
                     r = await r.json();
                     this.setStateItemsOutOfStock(r);
+                    let copy = Object.assign({}, this.state.options);
+                    copy.loading = false;
+                    this.setState({options:copy})
                 }
             }
         }
@@ -72,6 +76,9 @@ export default class Warehouse extends Component {
                     r = await itemsOutOfStock(this.props.authentication);
                     r = await r.json();
                     this.setStateItemsOutOfStock(r);
+                    let copy = Object.assign({}, this.state.options);
+                    copy.loading = false;
+                    this.setState({options:copy})
                 }
             }
         }

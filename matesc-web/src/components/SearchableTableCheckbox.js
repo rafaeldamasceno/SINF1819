@@ -107,16 +107,11 @@ export default class SearchableTableCheckbox extends Component {
     this.props.checkedHandler(this.state.checkedOrders);
   }
 
-  render() {
-    return (<React.Fragment>
-      <Row>
-        <Col>
-          <h1>{this.props.title}</h1>
-        </Col>
-        {this.showSearch()}
-      </Row>
-      <form onSubmit={this.handleSubmit}>
-      <Table striped>
+  showTableOrLoading(){
+    if(this.props.options.loading){
+      return <div class="loader">Loading...</div>
+    }else{
+      return <Table striped>
         <thead>
           <tr>
             {this.showHeaders()}
@@ -126,6 +121,19 @@ export default class SearchableTableCheckbox extends Component {
           {this.showTable()}
         </tbody>
       </Table>
+    }
+  }
+
+  render() {
+    return (<React.Fragment>
+      <Row>
+        <Col>
+          <h1>{this.props.title}</h1>
+        </Col>
+        {this.showSearch()}
+      </Row>
+      <form onSubmit={this.handleSubmit}>
+      {this.showTableOrLoading()}
       </form>
     </React.Fragment>
     )

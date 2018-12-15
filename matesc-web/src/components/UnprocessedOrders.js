@@ -18,7 +18,8 @@ export default class UnprocessedOrders extends Component {
             ["A12", "FNAC Braga", "12/03/2019"],
             ["A23", "Papelaria Alegria", "04/02/2019"]],
             options: {
-                link: '/client-order-content'
+                link: '/client-order-content',
+                loading: true
             },
             updated: false
         };
@@ -36,6 +37,9 @@ export default class UnprocessedOrders extends Component {
                     this.setState({
                         updated: true
                     })
+                    let copy = Object.assign({}, this.state.options);
+                    copy.loading = false;
+                    this.setState({options:copy})
                 }
             }
         }
@@ -53,6 +57,9 @@ export default class UnprocessedOrders extends Component {
                 this.setState({
                     updated: true
                 })
+                let copy = Object.assign({}, this.state.options);
+                copy.loading = false;
+                this.setState({options:copy})
             }
         }
        
@@ -106,13 +113,12 @@ export default class UnprocessedOrders extends Component {
 
     render() {
         return <Container>
-            <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler = {this.checkedHandler} />
-            <Link to="/picking-list">
-                <Button outline color="primary" size="lg" className="float-right" onClick={this.preparePickingWave}>
-                    Create picking wave
-              </Button>
-            </Link>
-
-        </Container>;
+                <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler = {this.checkedHandler} />
+                <Link to="/picking-list">
+                    <Button outline color="primary" size="lg" className="float-right" onClick={this.preparePickingWave}>
+                        Create picking wave
+                    </Button>
+                </Link>
+            </Container>;
     }
 }

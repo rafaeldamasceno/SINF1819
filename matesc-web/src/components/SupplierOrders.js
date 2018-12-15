@@ -18,7 +18,8 @@ export default class SupplierOrders extends Component {
                 ["A14","Papalaco & Papeis","12/03/2019"],
                 ["A19","Recheio","30/01/2019"]],
             options:{
-                link:'/supplier-order-content'
+                link:'/supplier-order-content',
+                loading: true
             },
             updated: false
         };
@@ -36,6 +37,9 @@ export default class SupplierOrders extends Component {
                     this.setState({
                         updated:true
                     })
+                    let copy = Object.assign({}, this.state.options);
+                    copy.loading = false;
+                    this.setState({options:copy})
                 }
             } 
         }            
@@ -52,6 +56,9 @@ export default class SupplierOrders extends Component {
                 this.setState({
                     updated:true
                 })
+                let copy = Object.assign({}, this.state.options);
+                copy.loading = false;
+                this.setState({options:copy})
             }
         }
     }

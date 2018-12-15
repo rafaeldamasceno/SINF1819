@@ -17,6 +17,7 @@ props{
         search: shows or not the search field
         print: shows or not the print field
         searchInput: only shows rows with that word (used to be able to search words from parents, search should be false)
+        loading: true if a loading spinner should be shown
     }
 }
 
@@ -115,16 +116,11 @@ export default class SearchableTable extends Component {
         }
     }
 
-    render() {
-        return (<React.Fragment>
-            <Row>
-                <Col>
-                    <h1>{this.props.title}</h1>
-                </Col>
-                {this.showPrint()}
-                {this.showSearch()}
-            </Row>
-            <Table striped>
+    showTableOrLoading(){
+        if(this.props.options.loading){
+            return <div class="loader">Loading...</div>            
+        }else{
+            return <Table striped>
                 <thead>
                     <tr>
                         {this.showHeaders()}
@@ -134,6 +130,20 @@ export default class SearchableTable extends Component {
                     {this.showTable()}
                 </tbody>
             </Table>
+        }
+    }
+
+    render() {
+        console.log("manel");
+        return (<React.Fragment>
+            <Row>
+                <Col>
+                    <h1>{this.props.title}</h1>
+                </Col>
+                {this.showPrint()}
+                {this.showSearch()}
+            </Row>
+            {this.showTableOrLoading()}
         </React.Fragment>
         )
     }

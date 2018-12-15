@@ -20,7 +20,8 @@ export default class SupplierOrderContent extends Component {
             ["A004", "Calculator", "Corridor 2, Shelf 2, R", "13"]],
             options: {
                 link: false,
-                search: true
+                search: true,
+                loading: true
             },
             updated: false,
             error: false
@@ -47,6 +48,9 @@ export default class SupplierOrderContent extends Component {
                     r = await supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
                     r = await r.json();
                     this.setStateOrderContent(r);
+                    let copy = Object.assign({}, this.state.options);
+                    copy.loading = false;
+                    this.setState({options:copy})
                 }
             }
         }
@@ -69,6 +73,9 @@ export default class SupplierOrderContent extends Component {
                     r = await supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
                     r = await r.json();
                     this.setStateOrderContent(r);
+                    let copy = Object.assign({}, this.state.options);
+                    copy.loading = false;
+                    this.setState({options:copy})
                 }
             }
         }
