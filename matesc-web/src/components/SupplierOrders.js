@@ -97,11 +97,18 @@ export default class SupplierOrders extends Component {
         });
     }
 
+    showLoadingOrButton() {
+        if(this.state.loading) {
+            return <div class="loader">Loading...</div>;
+        } else {
+            return <Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button>;
+        }
+    }
+
 
     async prepareTransformDoc() {
 
         this.setState({loading: true});
-        //<div class="loader">Loading...</div>
 
         const cookies = new Cookies();
 
@@ -121,8 +128,8 @@ export default class SupplierOrders extends Component {
             await createVGR(cookies.get('token'), id[0], id.substring(1, id.length), entity);
         }
 
-        console.log("chegou a resposta");
         this.setState({loading: false});
+        window.location.href='/products-to-store';
     }
     /* async prepareReplenishmentWave() {
          if(!this.state.checkedOrders) {
@@ -157,7 +164,7 @@ export default class SupplierOrders extends Component {
                 <Container>
                     {errorMessage(this.state.error)}
                     <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler={this.checkedHandler} />
-                    <Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button>
+                    {this.showLoadingOrButton()}
                 </Container>
             </React.Fragment>)
     }
