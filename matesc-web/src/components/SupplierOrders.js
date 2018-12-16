@@ -3,7 +3,6 @@ import {
     Container,
     Button
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
 import Cookies from 'universal-cookie';
 import { unprocessedSuppliersOrdersFetch, createVGR, supplierOrderInfoContent, errorMessage } from '../utils';
@@ -97,9 +96,19 @@ export default class SupplierOrders extends Component {
         });
     }
 
+    showLoadingOrButton() {
+        if(this.state.loading) {
+            return <div class="loader">Loading...</div>;
+        } else {
+            return <Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button>;
+        }
+    }
+
 
     async prepareTransformDoc() {
+
         const cookies = new Cookies();
+
         if (!this.state.checkedOrders) {
             return;
         }
@@ -108,6 +117,8 @@ export default class SupplierOrders extends Component {
             return;
         }
 
+        this.setState({loading: true});
+
         for (let i = 0; i < this.state.checkedOrders.length; i++) {
             let id = this.state.checkedOrders[i];
             let orderInfo = await supplierOrderInfoContent(cookies.get('token'), id[0], id.substring(1, id.length));
@@ -115,30 +126,10 @@ export default class SupplierOrders extends Component {
             entity = entity.DataSet.Table[0].Entidade;
             await createVGR(cookies.get('token'), id[0], id.substring(1, id.length), entity);
         }
+
+        this.setState({loading: false});
+        window.location.href='/products-to-store';
     }
-    /* async prepareReplenishmentWave() {
-         if(!this.state.checkedOrders) {
-             return;
-         }
- 
-         if(this.state.checkedOrders.length === 0) {
-             return;
-         } 
- 
-         let orders = [];
- 
-         for(let i = 0; i < this.state.checkedOrders.length; i++) {
-             let id = this.state.checkedOrders[i];
- 
-             let items = await supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
-             items = await items.json();
- 
-             orders.push(items.DataSet.Table);
-         }
- 
-         let replenishmentList = await createReplenishmentWave(orders);
-         console.log(await replenishmentList.json());
-     }*/
 
     render() {
         return (
@@ -147,7 +138,7 @@ export default class SupplierOrders extends Component {
                 <Container>
                     {errorMessage(this.state.error)}
                     <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler={this.checkedHandler} />
-                    <Link to='/produts-to-store'><Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button></Link>
+                    {this.showLoadingOrButton()}
                 </Container>
             </React.Fragment>)
     }
