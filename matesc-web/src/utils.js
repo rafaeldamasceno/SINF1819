@@ -134,7 +134,6 @@ export function errorMessage(error) {
 }
 
 
-
 export function loadItems(authentication) {
     return fetch(`${PRIMAVERA_URL}/Base/Artigos/LstArtigos`, {
         headers: makeHeaders(authentication)

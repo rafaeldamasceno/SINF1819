@@ -4,9 +4,10 @@ import {
     Button,
     Col, Form,
     FormGroup,
+    Alert,
 } from 'reactstrap';
 import Cookies from 'universal-cookie';
-import { authenticate, errorMessage} from './utils';
+import { authenticate} from './utils';
 
 export default class Login extends Component {
     constructor(props){
@@ -52,9 +53,14 @@ export default class Login extends Component {
         
     }
 
+    showWrongCredencials(){
+        if(this.state.error)
+            return <Alert color="danger"> Username/Password Errada</Alert>
+    }
+
     render() {
         return (<Container className="Login">
-            {errorMessage(this.state.error)}
+            {this.showWrongCredencials()}
             <h2>Log In</h2>
             <Form className="form" onSubmit={this.validateInput}>
                 <Col>

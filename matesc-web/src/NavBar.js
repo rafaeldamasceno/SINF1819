@@ -48,6 +48,9 @@ export default class NavBar extends Component {
                 <NavItem>
                   <Link to='/warehouse'><NavLink>Warehouse</NavLink></Link>
                 </NavItem>
+                <NavItem>
+                  <Link to='/products-to-store'><NavLink>Products to store</NavLink></Link>
+                </NavItem>
               </Nav>
             </Collapse>
           </Navbar>
