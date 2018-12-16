@@ -186,6 +186,11 @@ function getPath(nodes) {
 	return bestPath
 }
 
+function getSimpleLocation(location) {
+	let locationChars = /A1\.(\d)\.(\d)\.[R,L]/.exec(location)
+	return `${locationChars[1]}${locationChars[2]}`
+}
+
 function splitItems(items, maxWeight, maxVolume, maxLocations) {
 	let splitItems = []
 	let currWeight = 0
@@ -212,11 +217,6 @@ function splitItems(items, maxWeight, maxVolume, maxLocations) {
 	splitItems.push({ items: currWave, locations: currLocations })
 
 	return splitItems
-}
-
-function getSimpleLocation(location) {
-	let locationChars = /A1\.(\d)\.(\d)\.[R,L]/.exec(location)
-	return `${locationChars[1]}${locationChars[2]}`
 }
 
 function createWaves(items) {
