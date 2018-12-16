@@ -219,10 +219,15 @@ function createWaves(items) {
 	let split = splitItems([].concat.apply([], items), 150, 0.1)
 	for (let i = 0; i < split.length; i++) {
 		let waveLocations = []
+		let bufferWaveLocations = []
 		for (let j = 0; j < split[i].length; j++) {
 			let location = getSimpleLocation(split[i][j].Localizacao)
 			if (!waveLocations.includes(location)) {
-				waveLocations.push(location)
+				if (waveLocations.length == 10) {
+					bufferWaveLocations.push(location)
+				} else {
+					waveLocations.push(location)
+				}
 			}
 		}
 		let path = getPath(waveLocations)
@@ -235,6 +240,18 @@ function createWaves(items) {
 			}
 		}
 		waves.push(wave)
+
+		if (bufferWaveLocations.length > 0) {
+			let bufferPath = getPath(bufferWaveLocations)
+			let bufferWave = []
+			for (let k = 0; k < bufferPath.length; k++) {
+				for (let j = 0; j < split[i].length; j++) {
+					if (bufferPath[k] == getSimpleLocation(split[i][j].Localizacao)) {
+						bufferWave.push(split[i][j])
+					}
+				}
+			}
+		}
 	}
 	return waves
 }
