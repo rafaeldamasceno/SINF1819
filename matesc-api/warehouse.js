@@ -186,25 +186,30 @@ function getPath(nodes) {
 	return bestPath
 }
 
-function splitItems(items, maxWeight, maxVolume) {
+function splitItems(items, maxWeight, maxVolume, maxLocations) {
 	let splitItems = []
 	let currWeight = 0
 	let currVolume = 0
+	let currLocations = []
 	let currWave = []
 
 	for (let i = 0; i < items.length; i++) {
-		if (currWeight + items[i].PesoTotal > maxWeight || currVolume + items[i].VolumeTotal > maxVolume) {
-			splitItems.push(currWave)
+		if (currWeight + items[i].PesoTotal > maxWeight || currVolume + items[i].VolumeTotal > maxVolume || currLocations.length == maxLocations) {
+			splitItems.push({ items: currWave, locations: currLocations })
 			currWeight = 0
 			currVolume = 0
 			currWave = []
+			currLocations = []
 		}
 		currWave.push(items[i])
 		currWeight += items[i].PesoTotal
 		currVolume += items[i].VolumeTotal
+		let location = getSimpleLocation(split[i][j].Localizacao)
+		if (!currLocations.includes(location)) {
+			currLocations.push(location)
+		}
 	}
-
-	splitItems.push(currWave)
+	splitItems.push({ items: currWave, locations: currLocations })
 
 	return splitItems
 }
@@ -217,20 +222,10 @@ function getSimpleLocation(location) {
 function createWaves(items) {
 	let waves = []
 	let split = splitItems([].concat.apply([], items), 150, 0.1)
+	console.log(split)
+	return
 	for (let i = 0; i < split.length; i++) {
-		let waveLocations = []
-		let bufferWaveLocations = []
-		for (let j = 0; j < split[i].length; j++) {
-			let location = getSimpleLocation(split[i][j].Localizacao)
-			if (!waveLocations.includes(location)) {
-				if (waveLocations.length == 10) {
-					bufferWaveLocations.push(location)
-				} else {
-					waveLocations.push(location)
-				}
-			}
-		}
-		let path = getPath(waveLocations)
+		let path = getPath(split[i])
 		let wave = []
 		for (let k = 0; k < path.length; k++) {
 			for (let j = 0; j < split[i].length; j++) {
@@ -239,20 +234,10 @@ function createWaves(items) {
 				}
 			}
 		}
-		waves.push(wave)
 
-		if (bufferWaveLocations.length > 0) {
-			let bufferPath = getPath(bufferWaveLocations)
-			let bufferWave = []
-			for (let k = 0; k < bufferPath.length; k++) {
-				for (let j = 0; j < split[i].length; j++) {
-					if (bufferPath[k] == getSimpleLocation(split[i][j].Localizacao)) {
-						bufferWave.push(split[i][j])
-					}
-				}
-			}
-		}
+		waves.push(wave)
 	}
+
 	return waves
 }
 
