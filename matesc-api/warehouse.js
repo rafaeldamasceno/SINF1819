@@ -204,7 +204,7 @@ function splitItems(items, maxWeight, maxVolume, maxLocations) {
 		currWave.push(items[i])
 		currWeight += items[i].PesoTotal
 		currVolume += items[i].VolumeTotal
-		let location = getSimpleLocation(split[i][j].Localizacao)
+		let location = getSimpleLocation(items[i].Localizacao)
 		if (!currLocations.includes(location)) {
 			currLocations.push(location)
 		}
@@ -221,16 +221,15 @@ function getSimpleLocation(location) {
 
 function createWaves(items) {
 	let waves = []
-	let split = splitItems([].concat.apply([], items), 150, 0.1)
+	let split = splitItems([].concat.apply([], items), 150, 0.1, 10)
 	console.log(split)
-	return
 	for (let i = 0; i < split.length; i++) {
-		let path = getPath(split[i])
+		let path = getPath(split[i].locations)
 		let wave = []
 		for (let k = 0; k < path.length; k++) {
-			for (let j = 0; j < split[i].length; j++) {
-				if (path[k] == getSimpleLocation(split[i][j].Localizacao)) {
-					wave.push(split[i][j])
+			for (let j = 0; j < split[i].items.length; j++) {
+				if (path[k] == getSimpleLocation(split[i].items[j].Localizacao)) {
+					wave.push(split[i].items[j])
 				}
 			}
 		}
