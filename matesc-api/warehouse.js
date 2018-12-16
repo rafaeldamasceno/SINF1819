@@ -222,7 +222,6 @@ function getSimpleLocation(location) {
 function createWaves(items) {
 	let waves = []
 	let split = splitItems([].concat.apply([], items), 150, 0.1, 10)
-	console.log(split)
 	for (let i = 0; i < split.length; i++) {
 		let path = getPath(split[i].locations)
 		let wave = []
