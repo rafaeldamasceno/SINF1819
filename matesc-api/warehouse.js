@@ -172,11 +172,11 @@ function getPath(nodes) {
 
 	perms.forEach(perm => {
 		let cost = 0
-		cost += paths[`PC-${perm[0]}`]['cost']
+		cost += paths[`PC-${perm[0]}`].cost
 		for (let i = 0; i < perm.length - 1; i++) {
-			cost += paths[`${perm[i]}-${perm[i + 1]}`]['cost']
+			cost += paths[`${perm[i]}-${perm[i + 1]}`].cost
 		}
-		cost += paths[`${perm[perm.length - 1]}-PC`]['cost']
+		cost += paths[`${perm[perm.length - 1]}-PC`].cost
 		if (cost < minimumCost) {
 			minimumCost = cost
 			bestPath = perm
