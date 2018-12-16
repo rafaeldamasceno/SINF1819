@@ -27,7 +27,7 @@ export default class Login extends Component {
             cookies.set('token', token, { path: '/' }); 
             
         }else{
-            console.log("im dying");
+            console.log("bad login info");
             
         }
         

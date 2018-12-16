@@ -6,11 +6,17 @@ import {
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
+import NavBar from "../NavBar"
 import { unprocessedClientOrdersFetch, createPickingWave, clientOrderContent } from '../utils';
 
 export default class UnprocessedOrders extends Component {
 
     constructor(props) {
+
+        console.log("tou no construtor do unprocessed orders");
+        const cookies = new Cookies();
+        console.log(cookies.get('token')); // Pacman
+
         super(props);
         this.state = {
             title: "Client Orders",
@@ -25,16 +31,20 @@ export default class UnprocessedOrders extends Component {
             updated: false
         };
         this.checkedHandler = this.checkedHandler.bind(this);
-        this.preparePickingWave = this.preparePickingWave.bind(this);
+        this.preparePickingWave = this.preparePickingWave.bind(this);        
     }
 
     async componentDidMount() {
+        console.log("tou no componenet did mount");
         const cookies = new Cookies();
+        
         console.log(cookies.get('token')); // Pacman
         if (!this.state.updated) {
-            if (this.props !== undefined) {
-                if (this.props.authentication !== undefined) {
-                    let r = await unprocessedClientOrdersFetch(this.props.authentication);
+            //if (this.props !== undefined) {
+                if (cookies.get('token') !== undefined) {
+                    console.log("tou no compoennt did mount e os cookies nao tao undefined");
+                    
+                    let r = await unprocessedClientOrdersFetch(cookies.get('token'));
                     r = await r.json();
                     this.setStateTableData(r);
                     this.setState({
@@ -44,7 +54,7 @@ export default class UnprocessedOrders extends Component {
                     copy.loading = false;
                     this.setState({options:copy})
                 }
-            }
+            //}
         }
 
 
@@ -52,9 +62,15 @@ export default class UnprocessedOrders extends Component {
 
     async componentDidUpdate() {
         //know if i already updated
+        console.log("tou no component did update");
+        const cookies = new Cookies();
+        
+        
         if (!this.state.updated) {
-            if (this.props.authentication !== undefined) {
-                let r = await unprocessedClientOrdersFetch(this.props.authentication);
+            if (cookies.get('token') !== undefined) {
+                console.log("tou no component did update e os cookies nao tao undefined");
+                
+                let r = await unprocessedClientOrdersFetch(cookies.get('token'));
                 r = await r.json();
                 this.setStateTableData(r);
                 this.setState({
@@ -90,7 +106,7 @@ export default class UnprocessedOrders extends Component {
     }
 
     async preparePickingWave() {
-
+        const cookies = new Cookies();
         if(!this.state.checkedOrders) {
             return;
         }
@@ -104,7 +120,7 @@ export default class UnprocessedOrders extends Component {
         for(let i = 0; i < this.state.checkedOrders.length; i++) {
             let id = this.state.checkedOrders[i];
 
-            let items = await clientOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
+            let items = await clientOrderContent(cookies.get('token'), id[0], id.substring(1, id.length));
             items = await items.json();
 
             orders.push(items.DataSet.Table);
@@ -115,13 +131,21 @@ export default class UnprocessedOrders extends Component {
     }
 
     render() {
-        return <Container>
+        console.log("tou no render do unprocessed orders");
+        
+        return (
+        
+        <React.Fragment>
+        <NavBar/>
+            <Container>
                 <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler = {this.checkedHandler} />
                 <Link to="/picking-list">
                     <Button outline color="primary" size="lg" className="float-right" onClick={this.preparePickingWave}>
                         Create picking wave
                     </Button>
                 </Link>
-            </Container>;
+        </Container>
+        </React.Fragment> 
+        );
     }
 }
