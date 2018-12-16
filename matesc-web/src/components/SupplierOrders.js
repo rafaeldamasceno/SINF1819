@@ -3,7 +3,6 @@ import {
     Container,
     Button
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
 import Cookies from 'universal-cookie';
 import { unprocessedSuppliersOrdersFetch, createVGR, supplierOrderInfoContent, errorMessage } from '../utils';
@@ -108,8 +107,6 @@ export default class SupplierOrders extends Component {
 
     async prepareTransformDoc() {
 
-        this.setState({loading: true});
-
         const cookies = new Cookies();
 
         if (!this.state.checkedOrders) {
@@ -119,6 +116,8 @@ export default class SupplierOrders extends Component {
         if (this.state.checkedOrders.length === 0) {
             return;
         }
+
+        this.setState({loading: true});
 
         for (let i = 0; i < this.state.checkedOrders.length; i++) {
             let id = this.state.checkedOrders[i];
@@ -131,31 +130,6 @@ export default class SupplierOrders extends Component {
         this.setState({loading: false});
         window.location.href='/products-to-store';
     }
-    /* async prepareReplenishmentWave() {
-         if(!this.state.checkedOrders) {
-             return;
-         }
- 
-         if(this.state.checkedOrders.length === 0) {
-             return;
-         } 
- 
-         let orders = [];
- 
-         for(let i = 0; i < this.state.checkedOrders.length; i++) {
-             let id = this.state.checkedOrders[i];
- 
-             let items = await supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
-             items = await items.json();
- 
-             orders.push(items.DataSet.Table);
-         }
- 
-         let replenishmentList = await createReplenishmentWave(orders);
-         console.log(await replenishmentList.json());
-     }*/
-
-     //<Link to='/products-to-store'> </Link>
 
     render() {
         return (

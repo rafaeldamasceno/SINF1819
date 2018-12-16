@@ -3,9 +3,8 @@ import {
     Container,
     Button
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
-import { itemsToStore } from '../utils';
+import { itemsToStore, getItem, createReplenishmentWave } from '../utils';
 import Cookies from 'universal-cookie';
 import NavBar from '../NavBar';
 
@@ -26,6 +25,7 @@ export default class ProductsToStore extends Component {
             updated: false
         };
         this.checkedHandler = this.checkedHandler.bind(this);
+        this.prepareReplenishmentWave = this.prepareReplenishmentWave.bind(this);
     }
 
     async componentDidMount() {
@@ -99,26 +99,10 @@ export default class ProductsToStore extends Component {
         });
     }
 
+    async prepareReplenishmentWave() {
+        const cookies = new Cookies();
 
-    // async prepareTransformDoc(){
-    //     if(!this.state.checkedOrders) {
-    //         return;
-    //     }
-
-    //     if(this.state.checkedOrders.length === 0) {
-    //         return;
-    //     }
-
-    //     for(let i =0; i < this.state.checkedOrders.length; i++){
-    //         let id = this.state.checkedOrders[i];
-    //         let orderInfo = await supplierOrderInfoContent(this.props.authentication,id[0], id.substring(1, id.length)); 
-    //         let entity = await orderInfo.json();
-    //         entity = entity.DataSet.Table[0].Entidade;
-    //         await createVGR(this.props.authentication,id[0], id.substring(1, id.length),entity);
-    //     }
-    // }
-    /* async prepareReplenishmentWave() {
-         if(!this.state.checkedOrders) {
+        if(!this.state.checkedOrders) {
              return;
          }
  
@@ -126,27 +110,27 @@ export default class ProductsToStore extends Component {
              return;
          } 
  
-         let orders = [];
+         let items = [];
  
          for(let i = 0; i < this.state.checkedOrders.length; i++) {
              let id = this.state.checkedOrders[i];
+            
+             let item = await getItem(cookies.get('token'), id, 'A2');
+             item = await item.json();
  
-             let items = await supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
-             items = await items.json();
- 
-             orders.push(items.DataSet.Table);
+             items.push(item.DataSet.Table);
          }
  
-         let replenishmentList = await createReplenishmentWave(orders);
+         let replenishmentList = await createReplenishmentWave(items);
          console.log(await replenishmentList.json());
-     }*/
+     }
 
     render() {
         return (
             <Container>
                 <NavBar />
                 <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler={this.checkedHandler} />
-                <Link to='/produts-to-store'><Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button></Link>
+                <Button outline color='primary' size='lg' className='float-right' onClick={this.prepareReplenishmentWave}>Confirm Arrival</Button>
             </Container>)
     }
 }

@@ -119,6 +119,15 @@ export function itemsToStore(authentication){
     });
 }
 
+export function getItem(authentication, item, warehouse){
+    return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body: JSON.stringify(`SELECT Armazem, Artigos.*, ISNULL(V_INV_ArtigoArmazem.StkActual, 0) AS StkActual, (PesoUnit * StkActual) as PesoTotal, (VolumeUnit * StkActual) as VolumeTotal FROM V_INV_ArtigoArmazem INNER JOIN (SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigo.Artigo , Artigo.Descricao, ArmazemLocalizacoes.Localizacao, Artigo.Peso as PesoUnit, Artigo.Volume as VolumeUnit FROM Artigo INNER JOIN ArmazemLocalizacoes ON ArmazemLocalizacoes.Localizacao = Artigo.LocalizacaoSugestao) AS Artigos ON V_INV_ArtigoArmazem.Artigo=Artigos.Artigo AND V_INV_ArtigoArmazem.Armazem='${warehouse}' AND Artigos.Artigo='${item}'`
+        )
+    });
+}
+
 export function createPickingWave(orders) {
     return fetch(`${MATESC_URL}/picking-wave`, {
         method: 'POST',
