@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
 import NavBar from "../NavBar"
-import { unprocessedClientOrdersFetch, createPickingWave, clientOrderContent } from '../utils';
+import { unprocessedClientOrdersFetch, createPickingWave, clientOrderContent, errorMessage } from '../utils';
 
 export default class UnprocessedOrders extends Component {
 
@@ -23,40 +23,20 @@ export default class UnprocessedOrders extends Component {
                 link: '/client-order-content',
                 loading: true
             },
-            updated: false
+            updated: false,
+            error:false
         };
         this.checkedHandler = this.checkedHandler.bind(this);
-        this.preparePickingWave = this.preparePickingWave.bind(this);  
-              
+        this.preparePickingWave = this.preparePickingWave.bind(this);
+
     }
 
     async componentDidMount() {
         const cookies = new Cookies();
         if (!this.state.updated) {
-                if (cookies.get('token') !== undefined) {
-                    console.log(cookies.get('token'));
-                                       
-                    let r = await unprocessedClientOrdersFetch(cookies.get('token'));
-                    r = await r.json();
-                    this.setStateTableData(r);
-                    this.setState({
-                        updated: true
-                    })
-                    let copy = Object.assign({}, this.state.options);
-                    copy.loading = false;
-                    this.setState({options:copy})
-                }
-        }
+            if (cookies.get('token') !== undefined) {
+                console.log(cookies.get('token'));
 
-
-    }
-
-    async componentDidUpdate() {
-        //know if i already updated
-        const cookies = new Cookies();
-        
-        if (!this.state.updated) {
-            if (cookies.get('token') !== undefined) {               
                 let r = await unprocessedClientOrdersFetch(cookies.get('token'));
                 r = await r.json();
                 this.setStateTableData(r);
@@ -65,14 +45,40 @@ export default class UnprocessedOrders extends Component {
                 })
                 let copy = Object.assign({}, this.state.options);
                 copy.loading = false;
-                this.setState({options:copy})
+                this.setState({ options: copy })
             }
         }
-       
+
+
+    }
+
+    async componentDidUpdate() {
+        //know if i already updated
+        const cookies = new Cookies();
+
+        if (!this.state.updated) {
+            if (cookies.get('token') !== undefined) {
+                let r = await unprocessedClientOrdersFetch(cookies.get('token'));
+                r = await r.json();
+                this.setStateTableData(r);
+                this.setState({
+                    updated: true
+                })
+                let copy = Object.assign({}, this.state.options);
+                copy.loading = false;
+                this.setState({ options: copy })
+            }
+        }
+
     }
 
     setStateTableData(response) {
         let a = [];
+        if(!response.DataSet){
+            this.setState({
+                error:true
+            })
+        }
         //building state with response
         for (let i = 0; i < response.DataSet.Table.length; i++) {
             let data = response.DataSet.Table[i]['Data'];
@@ -86,25 +92,25 @@ export default class UnprocessedOrders extends Component {
         })
     }
 
-    checkedHandler(checkedOrders){
+    checkedHandler(checkedOrders) {
         this.setState({
-            checkedOrders : checkedOrders
-        });  
+            checkedOrders: checkedOrders
+        });
     }
 
     async preparePickingWave() {
         const cookies = new Cookies();
-        if(!this.state.checkedOrders) {
+        if (!this.state.checkedOrders) {
             return;
         }
 
-        if(this.state.checkedOrders.length === 0) {
+        if (this.state.checkedOrders.length === 0) {
             return;
-        } 
+        }
 
         let orders = [];
 
-        for(let i = 0; i < this.state.checkedOrders.length; i++) {
+        for (let i = 0; i < this.state.checkedOrders.length; i++) {
             let id = this.state.checkedOrders[i];
 
             let items = await clientOrderContent(cookies.get('token'), id[0], id.substring(1, id.length));
@@ -118,18 +124,19 @@ export default class UnprocessedOrders extends Component {
     }
 
     render() {
-        return (        
-        <React.Fragment>
-        <NavBar/>
-            <Container>
-                <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler = {this.checkedHandler} />
-                <Link to="/picking-list">
-                    <Button outline color="primary" size="lg" className="float-right" onClick={this.preparePickingWave}>
-                        Create picking wave
+        return (
+            <React.Fragment>
+                <NavBar />
+                <Container>
+                    {errorMessage(this.state.error)}
+                    <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler={this.checkedHandler} />
+                    <Link to="/picking-list">
+                        <Button outline color="primary" size="lg" className="float-right" onClick={this.preparePickingWave}>
+                            Create picking wave
                     </Button>
-                </Link>
-        </Container>
-        </React.Fragment> 
+                    </Link>
+                </Container>
+            </React.Fragment>
         );
     }
 }

@@ -6,7 +6,7 @@ import {
 import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
 import Cookies from 'universal-cookie';
-import { unprocessedSuppliersOrdersFetch, createVGR, supplierOrderInfoContent } from '../utils';
+import { unprocessedSuppliersOrdersFetch, createVGR, supplierOrderInfoContent, errorMessage } from '../utils';
 import NavBar from "../NavBar"
 
 export default class SupplierOrders extends Component {
@@ -68,6 +68,11 @@ export default class SupplierOrders extends Component {
     setStateTableData(response) {
 
         let a = [];
+        if(!response.DataSet){
+            this.setState({
+                error:true
+            })
+        }
         //building state with response
         for (let i = 0; i < response.DataSet.Table.length; i++) {
             let data = response.DataSet.Table[i]['DataDoc'];
@@ -135,6 +140,7 @@ export default class SupplierOrders extends Component {
             <React.Fragment>
                 <NavBar />
                 <Container>
+                    {errorMessage(this.state.error)}
                     <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler={this.checkedHandler} />
                     <Link to='/produts-to-store'><Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button></Link>
                 </Container>
