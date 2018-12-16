@@ -11,6 +11,7 @@ import SupplierOrderContent from './components/SupplierOrderContent';
 import ProductsToStore from './components/ProductsToStore';
 import { Redirect, BrowserRouter} from 'react-router-dom';
 import Cookies from 'universal-cookie';
+import UnfinishedLists from './components/UnfinishedLists';
 
 const AppContext = React.createContext();
 export const AppProvider = AppContext.Provider;
@@ -49,6 +50,7 @@ class App extends Component {
             <Route path='/warehouse' component={Warehouse} />
             <Route path='/replenishment-list' component={ReplenishmentList} />
             <Route path='/produts-to-store' component={ProductsToStore} />
+            <Route path='/unfinished-lists' component={UnfinishedLists} />
             <Switch>
               {this.showRedirect()}
             </Switch>

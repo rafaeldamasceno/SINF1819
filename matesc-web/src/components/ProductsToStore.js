@@ -8,7 +8,7 @@ import SearchableTableCheckbox from "./SearchableTableCheckbox";
 import {unprocessedSuppliersOrdersFetch,createVGR,supplierOrderInfoContent} from '../utils';
 import Cookies from 'universal-cookie';
 
-export default class SupplierOrders extends Component {
+export default class ProductsToStore extends Component {
     constructor(props) {
         super(props);
 
@@ -19,7 +19,6 @@ export default class SupplierOrders extends Component {
                 ["A14","Papalaco & Papeis","12/03/2019"],
                 ["A19","Recheio","30/01/2019"]],
             options:{
-                link:'/supplier-order-content',
                 loading: true
             },
             updated: false
