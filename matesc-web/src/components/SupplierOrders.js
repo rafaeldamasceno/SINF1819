@@ -31,6 +31,11 @@ export default class SupplierOrders extends Component {
 
     async componentDidMount() {
         const cookies = new Cookies();
+
+        if(!cookies.get('token')){
+            window.location.href = '/login';
+          }
+
         if (!this.state.updated) {
             if (cookies.get('token')) {
                 let r = await unprocessedSuppliersOrdersFetch(cookies.get('token'))

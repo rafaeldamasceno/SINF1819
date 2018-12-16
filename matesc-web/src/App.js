@@ -18,18 +18,13 @@ export const AppConsumer = AppContext.Consumer;
 
 class App extends Component {
 
-  componentDidMount(){
+  constructor(props){
+    super(props);
     const cookies = new Cookies();
     if(!cookies.get('token') && !window.location.href.endsWith('login')){
       window.location.href = '/login';
     }
   }
-
-  componentDidUpdate(){
-    console.log("ei fiz update");
-    
-  }
-
 
   showRedirect(){
     const cookies = new Cookies();

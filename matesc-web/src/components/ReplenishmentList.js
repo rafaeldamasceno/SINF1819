@@ -5,6 +5,7 @@ import {
     Button
 } from 'reactstrap';
 import SearchableTable from "./SearchableTable";
+import Cookies from 'universal-cookie';
 
 export default class ReplenishmentList extends Component {
     constructor(props) {
@@ -22,6 +23,14 @@ export default class ReplenishmentList extends Component {
                 print:true
             }
         };
+    }
+
+    componentDidMount(){
+        const cookies = new Cookies();
+
+        if(!cookies.get('token')){
+            window.location.href = '/login';
+          }
     }
 
     render() {

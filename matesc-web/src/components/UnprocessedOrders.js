@@ -33,6 +33,10 @@ export default class UnprocessedOrders extends Component {
 
     async componentDidMount() {
         const cookies = new Cookies();
+
+        if(!cookies.get('token')){
+            window.location.href = '/login';
+          }
         if (!this.state.updated) {
             if (cookies.get('token') !== undefined) {
                 console.log(cookies.get('token'));

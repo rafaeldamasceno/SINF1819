@@ -6,6 +6,7 @@ import {
 import { Link } from 'react-router-dom';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
 import {unprocessedSuppliersOrdersFetch,createVGR,supplierOrderInfoContent} from '../utils';
+import Cookies from 'universal-cookie';
 
 export default class SupplierOrders extends Component {
     constructor(props) {
@@ -13,7 +14,7 @@ export default class SupplierOrders extends Component {
 
         this.state = {
             title: "Products to Reallocate",
-            headers:[{name:"Product ID"},{name:"Product Name"},{name:"Quantity"},{name: "Include"}],
+            headers:[{name:"Product ID"},{name:"Product Name"},{name:"Suggested Location"},{name:"Quantity"},{name: "Include"}],
             data: [["A27","Sociedade de fornecimento, Lda","21/02/2019"],
                 ["A14","Papalaco & Papeis","12/03/2019"],
                 ["A19","Recheio","30/01/2019"]],
@@ -28,6 +29,12 @@ export default class SupplierOrders extends Component {
     }
 
     async componentDidMount(){
+        const cookies = new Cookies();
+
+        if(!cookies.get('token')){
+            window.location.href = '/login';
+          }
+
         if(!this.state.updated){
             if(this.props){
                 if(this.props.authentication){

@@ -8,7 +8,7 @@ import {
 
 import SearchableTable from "./SearchableTable";
 import { itemsInStock, itemsOutOfStock, errorMessage } from '../utils';
-import Cookie from 'universal-cookie';
+import Cookies from 'universal-cookie';
 import NavBar from '../NavBar';
 
 export default class Warehouse extends Component {
@@ -41,7 +41,11 @@ export default class Warehouse extends Component {
         this.searchInputUpdateHandle = this.searchInputUpdateHandle.bind(this);
     }
     async componentDidMount() {
-        const cookies = new Cookie();
+        const cookies = new Cookies();
+
+        if(!cookies.get('token')){
+            window.location.href = '/login';
+          }
         if (!this.state.updated) {
                 if (cookies.get('token') !== undefined) {
                     this.setState({
@@ -64,7 +68,7 @@ export default class Warehouse extends Component {
     }
     async componentDidUpdate() {
         //know if i already updated       
-        const cookies = new Cookie(); 
+        const cookies = new Cookies(); 
         if (!this.state.updated) {
                 if (cookies.get('token') !== undefined) {
                     this.setState({

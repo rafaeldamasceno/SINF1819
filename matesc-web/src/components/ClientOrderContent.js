@@ -31,13 +31,19 @@ export default class ClientOrderContent extends Component {
     }
 
     async componentDidMount() {
+        const cookies = new Cookies();
+
+        if(!cookies.get('token')){
+            window.location.href = '/login';
+          }
+
         let id = getUrlVars()['id'];
         let copy = Object.assign({}, this.state.orderInfo);
         copy.ID = id;
         this.setState({
             orderInfo: copy
         });
-        const cookies = new Cookies();
+
         if (!this.state.updated) {
             if (cookies.get('token') !== undefined) {
                 this.setState({
