@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route , Switch} from 'react-router-dom';
 import Login from './Login'
 import UnprocessedOrders from './components/UnprocessedOrders';
 import ClientOrderContent from './components/ClientOrderContent';
@@ -10,12 +10,22 @@ import ReplenishmentList from './components/ReplenishmentList';
 import SupplierOrderContent from './components/SupplierOrderContent';
 import ProductsToStore from './components/ProductsToStore';
 import { Redirect, BrowserRouter, Link } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
 const AppContext = React.createContext();
 export const AppProvider = AppContext.Provider;
 export const AppConsumer = AppContext.Consumer;
 
 class App extends Component {
+
+  showRedirect(){
+    const cookies = new Cookies();
+    if(!cookies.get('token')){
+      return <Redirect exact from='/' to='/login' />
+    } else{
+      return <Redirect exact from ='/' to= '/unprocessed-client-orders'/>
+    }
+  }
 
   render() {
     return (
@@ -31,6 +41,9 @@ class App extends Component {
             <Route path='/warehouse' component={Warehouse} />
             <Route path='/replenishment-list' component={ReplenishmentList} />
             <Route path='/produts-to-store' component={ProductsToStore} />
+            <Switch>
+              {this.showRedirect()}
+            </Switch>
           </React.Fragment>
         </BrowserRouter>
       </AppProvider>

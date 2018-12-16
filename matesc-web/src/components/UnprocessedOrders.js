@@ -26,13 +26,16 @@ export default class UnprocessedOrders extends Component {
             updated: false
         };
         this.checkedHandler = this.checkedHandler.bind(this);
-        this.preparePickingWave = this.preparePickingWave.bind(this);        
+        this.preparePickingWave = this.preparePickingWave.bind(this);  
+              
     }
 
     async componentDidMount() {
         const cookies = new Cookies();
         if (!this.state.updated) {
-                if (cookies.get('token') !== undefined) {                  
+                if (cookies.get('token') !== undefined) {
+                    console.log(cookies.get('token'));
+                                       
                     let r = await unprocessedClientOrdersFetch(cookies.get('token'));
                     r = await r.json();
                     this.setStateTableData(r);

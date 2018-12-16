@@ -24,7 +24,7 @@ export default class Login extends Component {
             console.log(token);
             
             const cookies = new Cookies();
-            cookies.set('token', token, { path: '/' }); 
+            cookies.set('token', token, { path: '/' , maxAge: 30});
             
         }else{
             console.log("bad login info");
