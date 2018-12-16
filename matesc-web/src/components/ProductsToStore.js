@@ -100,7 +100,7 @@ export default class SupplierOrders extends Component {
             let orderInfo = await supplierOrderInfoContent(this.props.authentication,id[0], id.substring(1, id.length)); 
             let entity = await orderInfo.json();
             entity = entity.DataSet.Table[0].Entidade;
-           let r = await createVGR(this.props.authentication,id[0], id.substring(1, id.length),entity);
+            await createVGR(this.props.authentication,id[0], id.substring(1, id.length),entity);
         }
     }
    /* async prepareReplenishmentWave() {

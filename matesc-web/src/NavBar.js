@@ -33,7 +33,6 @@ export default class NavBar extends Component {
  
   render() {
     return (
-      <BrowserRouter>
         <React.Fragment>
           <Navbar color='dark' dark fixed='top' expand='md'>
             <NavbarBrand className='text-white'>MATESC</NavbarBrand>
@@ -53,7 +52,6 @@ export default class NavBar extends Component {
             </Collapse>
           </Navbar>
         </React.Fragment>
-      </BrowserRouter>
     );
   }
 }

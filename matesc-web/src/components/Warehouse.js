@@ -8,6 +8,8 @@ import {
 
 import SearchableTable from "./SearchableTable";
 import { itemsInStock, itemsOutOfStock, errorMessage } from '../utils';
+import Cookie from 'universal-cookie';
+import NavBar from '../NavBar';
 
 export default class Warehouse extends Component {
 
@@ -39,48 +41,46 @@ export default class Warehouse extends Component {
         this.searchInputUpdateHandle = this.searchInputUpdateHandle.bind(this);
     }
     async componentDidMount() {
+        const cookies = new Cookie();
         if (!this.state.updated) {
-            if (this.props !== undefined) {
-                if (this.props.authentication !== undefined) {
+                if (cookies.get('token') !== undefined) {
                     this.setState({
                         updated: true
                     })
-                    let r = await itemsInStock(this.props.authentication);
+                    let r = await itemsInStock(cookies.get('token'));
                     r = await r.json();
                     this.setStateItemsInStock(r);
 
-                    r = await itemsOutOfStock(this.props.authentication);
+                    r = await itemsOutOfStock(cookies.get('token'));
                     r = await r.json();
                     this.setStateItemsOutOfStock(r);
                     let copy = Object.assign({}, this.state.options);
                     copy.loading = false;
                     this.setState({options:copy})
                 }
-            }
         }
 
 
     }
     async componentDidUpdate() {
-        //know if i already updated        
+        //know if i already updated       
+        const cookies = new Cookie(); 
         if (!this.state.updated) {
-            if (this.props !== undefined) {
-                if (this.props.authentication !== undefined) {
+                if (cookies.get('token') !== undefined) {
                     this.setState({
                         updated: true
                     })
-                    let r = await itemsInStock(this.props.authentication);
+                    let r = await itemsInStock(cookies.get('token'));
                     r = await r.json();
                     this.setStateItemsInStock(r);
 
-                    r = await itemsOutOfStock(this.props.authentication);
+                    r = await itemsOutOfStock(cookies.get('token'));
                     r = await r.json();
                     this.setStateItemsOutOfStock(r);
                     let copy = Object.assign({}, this.state.options);
                     copy.loading = false;
                     this.setState({options:copy})
                 }
-            }
         }
     }
 
@@ -142,7 +142,10 @@ export default class Warehouse extends Component {
     }
 
     render() {
-        return <Container>
+        return(
+        <React.Fragment>
+            <NavBar />
+            <Container>
             {errorMessage(this.state.error)}
             <Row>
                 <Col xs="0" className="ml-auto">
@@ -151,6 +154,7 @@ export default class Warehouse extends Component {
             </Row>
             <SearchableTable options={this.state.options} title={this.state.tableInStock.title} headers={this.state.tableInStock.tableHeaders} data={this.state.tableInStock.tableData} />
             <SearchableTable options={this.state.options} title={this.state.tableOutOfStock.title} headers={this.state.tableOutOfStock.tableHeaders} data={this.state.tableOutOfStock.tableData} />
-        </Container>;
+        </Container>
+        </React.Fragment>);
     }
 }

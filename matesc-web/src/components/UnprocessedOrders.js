@@ -12,11 +12,6 @@ import { unprocessedClientOrdersFetch, createPickingWave, clientOrderContent } f
 export default class UnprocessedOrders extends Component {
 
     constructor(props) {
-
-        console.log("tou no construtor do unprocessed orders");
-        const cookies = new Cookies();
-        console.log(cookies.get('token')); // Pacman
-
         super(props);
         this.state = {
             title: "Client Orders",
@@ -35,15 +30,9 @@ export default class UnprocessedOrders extends Component {
     }
 
     async componentDidMount() {
-        console.log("tou no componenet did mount");
         const cookies = new Cookies();
-        
-        console.log(cookies.get('token')); // Pacman
         if (!this.state.updated) {
-            //if (this.props !== undefined) {
-                if (cookies.get('token') !== undefined) {
-                    console.log("tou no compoennt did mount e os cookies nao tao undefined");
-                    
+                if (cookies.get('token') !== undefined) {                  
                     let r = await unprocessedClientOrdersFetch(cookies.get('token'));
                     r = await r.json();
                     this.setStateTableData(r);
@@ -54,7 +43,6 @@ export default class UnprocessedOrders extends Component {
                     copy.loading = false;
                     this.setState({options:copy})
                 }
-            //}
         }
 
 
@@ -62,14 +50,10 @@ export default class UnprocessedOrders extends Component {
 
     async componentDidUpdate() {
         //know if i already updated
-        console.log("tou no component did update");
         const cookies = new Cookies();
         
-        
         if (!this.state.updated) {
-            if (cookies.get('token') !== undefined) {
-                console.log("tou no component did update e os cookies nao tao undefined");
-                
+            if (cookies.get('token') !== undefined) {               
                 let r = await unprocessedClientOrdersFetch(cookies.get('token'));
                 r = await r.json();
                 this.setStateTableData(r);
@@ -131,10 +115,7 @@ export default class UnprocessedOrders extends Component {
     }
 
     render() {
-        console.log("tou no render do unprocessed orders");
-        
-        return (
-        
+        return (        
         <React.Fragment>
         <NavBar/>
             <Container>

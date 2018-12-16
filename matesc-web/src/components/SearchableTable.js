@@ -134,7 +134,6 @@ export default class SearchableTable extends Component {
     }
 
     render() {
-        console.log("manel");
         return (<React.Fragment>
             <Row>
                 <Col>

@@ -6,20 +6,22 @@ import {
     Button,
 } from 'reactstrap';
 import SearchableTable from "./SearchableTable";
+import Cookies from 'universal-cookie';
+import NavBar from "../NavBar";
 import { clientOrderInfoContent, getUrlVars, clientOrderContent, errorMessage } from '../utils';
 
 export default class ClientOrderContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            orderInfo: { ID: 67326, deadline: "12/01/2019", client: "Papelaria Mundo", total:"782€"},
+            orderInfo: { ID: 67326, deadline: "12/01/2019", client: "Papelaria Mundo", total: "782€" },
             title: "Items in order",
             tableHeaders: [{ name: "Product Code" }, { name: "Product Name" }, { name: "Location" }, { name: "Quantity" }],
             tableData: [["A001", "Binder", "Corridor 1, Shelf 2, L", "153"],
-                ["A002", "Crayons", "Corridor 3, Shelf 1, L", "50"],
-                ["A004", "Calculator", "Corridor 2, Shelf 2, R", "13"]],
-            options:{
-                link:false,
+            ["A002", "Crayons", "Corridor 3, Shelf 1, L", "50"],
+            ["A004", "Calculator", "Corridor 2, Shelf 2, R", "13"]],
+            options: {
+                link: false,
                 search: true,
                 loading: true
             },
@@ -35,55 +37,52 @@ export default class ClientOrderContent extends Component {
         this.setState({
             orderInfo: copy
         });
+        const cookies = new Cookies();
         if (!this.state.updated) {
-            if (this.props !== undefined) {
-                if (this.props.authentication !== undefined) {
-                    this.setState({
-                        updated: true
-                    })
-                    let r = await clientOrderInfoContent(this.props.authentication, id[0], id.substring(1, id.length));                  
-                    r = await r.json();
-                    this.setStateOrderInfo(r);
+            if (cookies.get('token') !== undefined) {
+                this.setState({
+                    updated: true
+                })
+                let r = await clientOrderInfoContent(cookies.get('token'), id[0], id.substring(1, id.length));
+                r = await r.json();
+                this.setStateOrderInfo(r);
 
-                    r = await clientOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
-                    r = await r.json();
-                    this.setStateOrderContent(r);
-                    let copy = Object.assign({}, this.state.options);
-                    copy.loading = false;
-                    this.setState({options:copy})
-                }
+                r = await clientOrderContent(cookies.get('token'), id[0], id.substring(1, id.length));
+                r = await r.json();
+                this.setStateOrderContent(r);
+                let copy = Object.assign({}, this.state.options);
+                copy.loading = false;
+                this.setState({ options: copy })
             }
         }
-
     }
 
     async componentDidUpdate() {
         //know if i already updated
+        const cookies = new Cookies();
         if (!this.state.updated) {
-              if (this.props !== undefined) {
-                if (this.props.authentication !== undefined) {
-                    let id = this.state.orderInfo.ID;
-                    this.setState({
-                        updated: true
-                    })
-                    let r = await clientOrderInfoContent(this.props.authentication, id[0], id.substring(1, id.length));
-                    r = await r.json();
-                    this.setStateOrderInfo(r);
+            if (cookies.get('token') !== undefined) {
+                let id = this.state.orderInfo.ID;
+                this.setState({
+                    updated: true
+                })
+                let r = await clientOrderInfoContent(cookies.get('token'), id[0], id.substring(1, id.length));
+                r = await r.json();
+                this.setStateOrderInfo(r);
 
-                    r = await clientOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
-                    r = await r.json();
-                    this.setStateOrderContent(r);
-                    let copy = Object.assign({}, this.state.options);
-                    copy.loading = false;
-                    this.setState({options:copy})
-                }
+                r = await clientOrderContent(cookies.get('token'), id[0], id.substring(1, id.length));
+                r = await r.json();
+                this.setStateOrderContent(r);
+                let copy = Object.assign({}, this.state.options);
+                copy.loading = false;
+                this.setState({ options: copy })
             }
         }
     }
 
     setStateOrderInfo(response) {
         if (!response.DataSet) {
-              this.setState({
+            this.setState({
                 error: true
             });
             return;
@@ -129,43 +128,47 @@ export default class ClientOrderContent extends Component {
 
     render() {
         return (
-        <Container>
-            {errorMessage(this.state.error)}
-            <Row>
-                <Col>
-                    <h1>Client order info</h1>
-                </Col>
-                <Col xs='1' className='ml-auto mr-2'>
-                    <Button><i class="fas fa-print"></i> Print</Button>
-                </Col>
-            </Row>
-            <div class='order-info'>
-                <p>
-                    <span class='font-weight-bold mr-1'>
-                        ID:
+            <React.Fragment>
+                <NavBar />
+                <Container>
+                    {errorMessage(this.state.error)}
+                    <Row>
+                        <Col>
+                            <h1>Client order info</h1>
+                        </Col>
+                        <Col xs='1' className='ml-auto mr-2'>
+                            <Button><i class="fas fa-print"></i> Print</Button>
+                        </Col>
+                    </Row>
+                    <div class='order-info'>
+                        <p>
+                            <span class='font-weight-bold mr-1'>
+                                ID:
                     </span>
-                    {this.state.orderInfo.ID}
-                </p>
-                <p>
-                    <span class='font-weight-bold mr-1'>
-                        Deadline:
+                            {this.state.orderInfo.ID}
+                        </p>
+                        <p>
+                            <span class='font-weight-bold mr-1'>
+                                Deadline:
                     </span>
-                    {this.state.orderInfo.deadline}
-                </p>
-                <p>
-                    <span class='font-weight-bold mr-1'>
-                        Client:
+                            {this.state.orderInfo.deadline}
+                        </p>
+                        <p>
+                            <span class='font-weight-bold mr-1'>
+                                Client:
                     </span>
-                    {this.state.orderInfo.client}
-                </p>
-                <p>
-                    <span class='font-weight-bold mr-1'>
-                        Total:
+                            {this.state.orderInfo.client}
+                        </p>
+                        <p>
+                            <span class='font-weight-bold mr-1'>
+                                Total:
                     </span>
-                    {this.state.orderInfo.total}
-                </p>
-            </div>
-            <SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData}></SearchableTable>
-        </Container>)
+                            {this.state.orderInfo.total}
+                        </p>
+                    </div>
+                    <SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData}></SearchableTable>
+                </Container>
+            </React.Fragment>
+        )
     }
 }

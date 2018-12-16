@@ -6,7 +6,9 @@ import {
     Button,
 } from 'reactstrap';
 import SearchableTable from "./SearchableTable";
+import Cookies from 'universal-cookie';
 import { supplierOrderInfoContent, getUrlVars, supplierOrderContent, errorMessage } from '../utils';
+import NavBar from '../NavBar';
 
 export default class SupplierOrderContent extends Component {
     constructor(props) {
@@ -35,23 +37,23 @@ export default class SupplierOrderContent extends Component {
         this.setState({
             orderInfo: copy
         });
-        if (!this.state.updated) {
-            if (this.props !== undefined) {
-                if (this.props.authentication !== undefined) {
-                    this.setState({
-                        updated: true
-                    })
-                    let r = await supplierOrderInfoContent(this.props.authentication, id[0], id.substring(1, id.length))
-                    r = await r.json();
-                    this.setStateOrderInfo(r);
+        const cookies = new Cookies();
 
-                    r = await supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
-                    r = await r.json();
-                    this.setStateOrderContent(r);
-                    let copy = Object.assign({}, this.state.options);
-                    copy.loading = false;
-                    this.setState({options:copy})
-                }
+        if (!this.state.updated) {
+            if (cookies.get('token') !== undefined) {
+                this.setState({
+                    updated: true
+                })
+                let r = await supplierOrderInfoContent(cookies.get('token'), id[0], id.substring(1, id.length))
+                r = await r.json();
+                this.setStateOrderInfo(r);
+
+                r = await supplierOrderContent(cookies.get('token'), id[0], id.substring(1, id.length));
+                r = await r.json();
+                this.setStateOrderContent(r);
+                let copy = Object.assign({}, this.state.options);
+                copy.loading = false;
+                this.setState({ options: copy })
             }
         }
 
@@ -59,31 +61,30 @@ export default class SupplierOrderContent extends Component {
 
     async componentDidUpdate() {
         //know if i already updated
+        const cookies = new Cookies();
         if (!this.state.updated) {
-              if (this.props !== undefined) {
-                if (this.props.authentication !== undefined) {
-                    let id = this.state.orderInfo.ID;
-                    this.setState({
-                        updated: true
-                    })
-                    let r = await supplierOrderInfoContent(this.props.authentication, id[0], id.substring(1, id.length))
-                    r = await r.json();
-                    this.setStateOrderInfo(r);
+            if (cookies.get('token') !== undefined) {
+                let id = this.state.orderInfo.ID;
+                this.setState({
+                    updated: true
+                })
+                let r = await supplierOrderInfoContent(cookies.get('token'), id[0], id.substring(1, id.length))
+                r = await r.json();
+                this.setStateOrderInfo(r);
 
-                    r = await supplierOrderContent(this.props.authentication, id[0], id.substring(1, id.length));
-                    r = await r.json();
-                    this.setStateOrderContent(r);
-                    let copy = Object.assign({}, this.state.options);
-                    copy.loading = false;
-                    this.setState({options:copy})
-                }
+                r = await supplierOrderContent(cookies.get('token'), id[0], id.substring(1, id.length));
+                r = await r.json();
+                this.setStateOrderContent(r);
+                let copy = Object.assign({}, this.state.options);
+                copy.loading = false;
+                this.setState({ options: copy })
             }
         }
     }
 
     setStateOrderInfo(response) {
         if (!response.DataSet) {
-              this.setState({
+            this.setState({
                 error: true
             });
             return;
@@ -131,43 +132,46 @@ export default class SupplierOrderContent extends Component {
 
     render() {
         return (
-            <Container>
-                {errorMessage(this.state.error)}
-                <Row>
-                    <Col>
-                        <h1>Supplier order info</h1>
-                    </Col>
-                    <Col xs='1' className='ml-auto mr-2'>
-                        <Button><i class="fas fa-print"></i> Print</Button>
-                    </Col>
-                </Row>
-                <div class='order-info'>
-                    <p>
-                        <span class='font-weight-bold mr-1'>
-                            ID:
+            <React.Fragment>
+                <NavBar />
+                <Container>
+                    {errorMessage(this.state.error)}
+                    <Row>
+                        <Col>
+                            <h1>Supplier order info</h1>
+                        </Col>
+                        <Col xs='1' className='ml-auto mr-2'>
+                            <Button><i class="fas fa-print"></i> Print</Button>
+                        </Col>
+                    </Row>
+                    <div class='order-info'>
+                        <p>
+                            <span class='font-weight-bold mr-1'>
+                                ID:
                     </span>
-                        {this.state.orderInfo.ID}
-                    </p>
-                    <p>
-                        <span class='font-weight-bold mr-1'>
-                            Arrival:
+                            {this.state.orderInfo.ID}
+                        </p>
+                        <p>
+                            <span class='font-weight-bold mr-1'>
+                                Arrival:
                     </span>
-                        {this.state.orderInfo.arrivalDate}
-                    </p>
-                    <p>
-                        <span class='font-weight-bold mr-1'>
-                            Supplier:
+                            {this.state.orderInfo.arrivalDate}
+                        </p>
+                        <p>
+                            <span class='font-weight-bold mr-1'>
+                                Supplier:
                     </span>
-                        {this.state.orderInfo.supplier}
-                    </p>
-                    <p>
-                        <span class='font-weight-bold mr-1'>
-                            Total:
+                            {this.state.orderInfo.supplier}
+                        </p>
+                        <p>
+                            <span class='font-weight-bold mr-1'>
+                                Total:
                     </span>
-                        {this.state.orderInfo.total}
-                    </p>
-                </div>
-                <SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData}></SearchableTable>
-            </Container>)
+                            {this.state.orderInfo.total}
+                        </p>
+                    </div>
+                    <SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData}></SearchableTable>
+                </Container>
+            </React.Fragment>)
     }
 }
