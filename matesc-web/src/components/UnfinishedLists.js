@@ -24,7 +24,7 @@ export default class UnfinishedLists extends Component {
                 ["A006", "Stapler"]]
             },
             tableReplenishList: {
-                title: "Out of stock items",
+                title: "Replenishment Lists",
                 tableHeaders: [{ name: "List ID" }, { name: "Creation Date" }],
                 tableData: [["A003", "Pencil"],
                 ["A004", "Calculator"],

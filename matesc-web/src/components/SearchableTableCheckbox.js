@@ -32,6 +32,7 @@ export default class SearchableTableCheckbox extends Component {
 
   rowContainsWord(row, input) {
     for (let rowField of row) {
+      rowField += "";
       rowField = rowField.toLowerCase();
 
       //if field contains input
@@ -50,6 +51,9 @@ export default class SearchableTableCheckbox extends Component {
     let children = [];
     if (this.props.options.link)
       children.push(<th scope="row"><Link to={this.props.options.link+"?id=" + row[0]}>{row[0]}</Link></th>);
+    else{
+      children.push(<th>{row[0]}</th>);
+    }
     let i = 1;
     for (; i < row.length; i++) {
       children.push(<td>{row[i]}</td>);

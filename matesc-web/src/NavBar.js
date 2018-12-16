@@ -52,7 +52,7 @@ export default class NavBar extends Component {
                   <Link to='/products-to-store'><NavLink>Products to store</NavLink></Link>
                 </NavItem>
                 <NavItem>
-                  <Link to='/unfinished-lists'><NavLink>Products to store</NavLink></Link>
+                  <Link to='/unfinished-lists'><NavLink>Unfinished lists</NavLink></Link>
                 </NavItem>
               </Nav>
             </Collapse>

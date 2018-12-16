@@ -110,6 +110,15 @@ export function itemsOutOfStock(authentication) {
     });
 }
 
+export function itemsToStore(authentication){
+    return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body: JSON.stringify(`SELECT Armazem, Artigos.*, ISNULL(V_INV_ArtigoArmazem.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem INNER JOIN (SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigo.Artigo , Artigo.Descricao FROM Artigo INNER JOIN ArmazemLocalizacoes ON ArmazemLocalizacoes.Localizacao = Artigo.LocalizacaoSugestao) AS Artigos ON V_INV_ArtigoArmazem.Artigo=Artigos.Artigo AND V_INV_ArtigoArmazem.Armazem='A2'`
+        )
+    });
+}
+
 export function createPickingWave(orders) {
     return fetch(`${MATESC_URL}/picking-wave`, {
         method: 'POST',

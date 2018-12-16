@@ -49,7 +49,7 @@ class App extends Component {
             <Route path='/picking-list' component={PickingList} />
             <Route path='/warehouse' component={Warehouse} />
             <Route path='/replenishment-list' component={ReplenishmentList} />
-            <Route path='/produts-to-store' component={ProductsToStore} />
+            <Route path='/products-to-store' component={ProductsToStore} />
             <Route path='/unfinished-lists' component={UnfinishedLists} />
             <Switch>
               {this.showRedirect()}
