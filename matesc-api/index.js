@@ -13,24 +13,27 @@ const warehouse = require('./warehouse')
 
 db.defaults({
 	pickingWaves: [],
-	resupplyWaves: []
+	pickingCount: 0,
+	resupplyWaves: [],
+	resupplyCount: 0
 }).write()
 
 app.use(cors())
-app.use(bodyParser.text())
+app.use(bodyParser.json())
 
 app.post('/picking-wave', (req, res) => {
-	console.log(JSON.parse(req.body))
-
 	let results = {}
-	results.waveId = db.get('pickingWaves').size().value() + 1
-	db.get('pickingWaves').push({ id: results.waveId }).write()
+	results.id = db.get('pickingCount').value() + 1
+	results.timestamp = new Date().toLocaleString()
+	results.waves = warehouse.createWaves(req.body)
+	db.get('pickingWaves').push({ results }).write()
+	db.update('pickingCount', n => n + 1).write()
 	res.send(results)
 })
 
 app.post('/resupply-wave', (req, res) => {
 	let results = {}
-	results.waveId = db.get('resupplyWaves').size().value() + 1
+	results.waveId = db.get('resupplyCount').value() + 1
 	db.get('resupplyWaves').push({ id: results.waveId }).write()
 	res.send(results)
 })
@@ -47,6 +50,4 @@ app.get('/resupply-wave/:id', (req, res) => {
 	res.send(results)
 })
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
-
-// console.log(warehouse.getPath(['12', '53', '32', '11']))
+app.listen(port, () => console.log(`MATESC API listening on port ${port}!`))

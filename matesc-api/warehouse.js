@@ -186,16 +186,62 @@ function getPath(nodes) {
 	return bestPath
 }
 
-function splitWaves(items, maxWeight, maxVolume) {
-	let splitWaves = [];
+function splitItems(items, maxWeight, maxVolume) {
+	let splitItems = []
+	let currWeight = 0
+	let currVolume = 0
+	let currWave = []
 
-	
-	
-	return splitWaves;
+	for (let i = 0; i < items.length; i++) {
+		if (currWeight + items[i].PesoTotal > maxWeight || currVolume + items[i].VolumeTotal > maxVolume) {
+			splitItems.push(currWave)
+			currWeight = 0
+			currVolume = 0
+			currWave = []
+		}
+		currWave.push(items[i])
+		currWeight += items[i].PesoTotal
+		currVolume += items[i].VolumeTotal
+	}
+
+	splitItems.push(currWave)
+
+	return splitItems
+}
+
+function getSimpleLocation(location) {
+	let locationChars = /A1\.(\d)\.(\d)\.[R,L]/.exec(location)
+	return `${locationChars[1]}${locationChars[2]}`
+}
+
+function createWaves(items) {
+	let waves = []
+	let split = splitItems([].concat.apply([], items), 150, 0.1)
+	for (let i = 0; i < split.length; i++) {
+		let waveLocations = []
+		for (let j = 0; j < split[i].length; j++) {
+			let location = getSimpleLocation(split[i][j].Localizacao)
+			if (!waveLocations.includes(location)) {
+				waveLocations.push(location)
+			}
+		}
+		let path = getPath(waveLocations)
+		let wave = []
+		for (let k = 0; k < path.length; k++) {
+			for (let j = 0; j < split[i].length; j++) {
+				if (path[k] == getSimpleLocation(split[i][j].Localizacao)) {
+					wave.push(split[i][j])
+				}
+			}
+		}
+		waves.push(wave)
+	}
+	return waves
 }
 
 module.exports = {
 	graph: warehouse,
 	getPath: getPath,
-	splitWaves: splitWaves
+	splitItems: splitItems,
+	createWaves: createWaves
 }

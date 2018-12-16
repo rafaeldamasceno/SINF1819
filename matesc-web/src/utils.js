@@ -122,7 +122,11 @@ export function itemsToStore(authentication){
 export function createPickingWave(orders) {
     return fetch(`${MATESC_URL}/picking-wave`, {
         method: 'POST',
-        body: JSON.stringify(orders)
+        body: JSON.stringify(orders),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
     })
 }
 
