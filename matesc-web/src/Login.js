@@ -6,36 +6,55 @@ import {
     FormGroup,
 } from 'reactstrap';
 import Cookies from 'universal-cookie';
-import { authenticate } from './utils';
+import { authenticate, errorMessage} from './utils';
 
 export default class Login extends Component {
     constructor(props){
         super(props);
+        this.state = {
+            loading: false,
+            error: false
+        }
+
         this.validateInput = this.validateInput.bind(this);
+    }
+
+    showLoadingOrButton(){
+        if(this.state.loading)
+            return <div class="loader">Loading...</div>
+        else
+            return <Button>Submit</Button>
+    }
+
+    loginSuccess(){
+        window.location.href = '/unprocessed-client-orders';
     }
 
    async validateInput(event){
         event.preventDefault();
+        this.setState({
+            loading:true
+        })
         let response = await authenticate(this.username.value, this.password.value);
+        this.setState({
+            loading:false
+        })
         if(response.status === 200){
-            console.log("login sucessfull");
-            
             let token = await response.json();
-            console.log(token);
-            
             const cookies = new Cookies();
-            cookies.set('token', token, { path: '/' , maxAge: 30});
-            
+            cookies.set('token', token, { path: '/' , maxAge: token.expires_in});
+            this.loginSuccess();
         }else{
-            console.log("bad login info");
-            
-        }
-        
+            this.setState({
+                error:true
+            }) 
+        }       
         
     }
 
     render() {
         return (<Container className="Login">
+            {errorMessage(this.state.error)}
             <h2>Log In</h2>
             <Form className="form" onSubmit={this.validateInput}>
                 <Col>
@@ -58,7 +77,7 @@ export default class Login extends Component {
                         />
                     </FormGroup>
                 </Col>
-                <Button>Submit</Button>
+                {this.showLoadingOrButton()}
             </Form>
         </Container>
         );

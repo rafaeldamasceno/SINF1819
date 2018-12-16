@@ -9,7 +9,7 @@ import SupplierOrders from './components/SupplierOrders';
 import ReplenishmentList from './components/ReplenishmentList';
 import SupplierOrderContent from './components/SupplierOrderContent';
 import ProductsToStore from './components/ProductsToStore';
-import { Redirect, BrowserRouter, Link } from 'react-router-dom';
+import { Redirect, BrowserRouter} from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
 const AppContext = React.createContext();
