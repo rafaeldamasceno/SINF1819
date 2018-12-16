@@ -99,7 +99,12 @@ export default class SupplierOrders extends Component {
 
 
     async prepareTransformDoc() {
+
+        this.setState({loading: true});
+        //<div class="loader">Loading...</div>
+
         const cookies = new Cookies();
+
         if (!this.state.checkedOrders) {
             return;
         }
@@ -115,6 +120,9 @@ export default class SupplierOrders extends Component {
             entity = entity.DataSet.Table[0].Entidade;
             await createVGR(cookies.get('token'), id[0], id.substring(1, id.length), entity);
         }
+
+        console.log("chegou a resposta");
+        this.setState({loading: false});
     }
     /* async prepareReplenishmentWave() {
          if(!this.state.checkedOrders) {
@@ -140,6 +148,8 @@ export default class SupplierOrders extends Component {
          console.log(await replenishmentList.json());
      }*/
 
+     //<Link to='/products-to-store'> </Link>
+
     render() {
         return (
             <React.Fragment>
@@ -147,7 +157,7 @@ export default class SupplierOrders extends Component {
                 <Container>
                     {errorMessage(this.state.error)}
                     <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler={this.checkedHandler} />
-                    <Link to='/products-to-store'><Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button></Link>
+                    <Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button>
                 </Container>
             </React.Fragment>)
     }
