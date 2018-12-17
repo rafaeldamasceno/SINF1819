@@ -142,19 +142,31 @@ export function createPickingWave(orders) {
 export function createReplenishmentWave(orders) {
     return fetch(`${MATESC_URL}/resupply-wave`, {
         method: 'POST',
-        body: JSON.stringify(orders)
+        body: JSON.stringify(orders),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
     })
 }
 
 export function getPickingWaves() {
     return fetch(`${MATESC_URL}/picking-wave`, {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
     })
 }
 
 export function getReplenishmentWaves() {
     return fetch(`${MATESC_URL}/resupply-wave`, {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
     })
 }
 

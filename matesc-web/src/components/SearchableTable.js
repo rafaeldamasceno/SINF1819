@@ -74,7 +74,7 @@ export default class SearchableTable extends Component {
         }
         let children = [];
         if (this.props.options.link)
-            children.push(<th scope="row"><Link to={this.props.options.link}>{row[0]}</Link></th>)
+            children.push(<th scope="row"><Link to={this.props.options.link+`?id=${row[0]}`}>{row[0]}</Link></th>)
         else {
             children.push(<th scope="row">{row[0]}</th>)
         }
