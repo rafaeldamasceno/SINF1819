@@ -25,6 +25,7 @@ app.post('/picking-wave', (req, res) => {
 	let results = {}
 	results.id = db.get('pickingCount').value() + 1
 	results.timestamp = new Date().toLocaleString()
+	results.finished = false
 	results.waves = warehouse.createWaves(req.body)
 	db.get('pickingWaves').push({ results }).write()
 	db.update('pickingCount', n => n + 1).write()
@@ -35,6 +36,12 @@ app.post('/resupply-wave', (req, res) => {
 	let results = {}
 	results.waveId = db.get('resupplyCount').value() + 1
 	db.get('resupplyWaves').push({ id: results.waveId }).write()
+	res.send(results)
+})
+
+app.get('/picking-wave', (req, res) => {
+	let results = {}
+	results = db.get('pickingWaves').value()
 	res.send(results)
 })
 
