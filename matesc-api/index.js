@@ -40,14 +40,34 @@ app.post('/resupply-wave', (req, res) => {
 })
 
 app.get('/picking-wave', (req, res) => {
-	let results = {}
-	results = db.get('pickingWaves').find({ finished: false }).value()
+	let results = []
+	if(db.get('pickingCount').value() === 0) {
+		res.send(results)
+		return
+	}
+
+	let pickingWaves = db.get('pickingWaves').value()
+	pickingWaves.forEach(wave => {
+		if(!wave.finished) {
+			results.push(wave);
+		}
+	});
 	res.send(results)
 })
 
 app.get('/resupply-wave', (req, res) => {
-	let results = {}
-	results = db.get('resupplyWaves').find({ finished: false }).value()
+	let results = []
+	if(db.get('resupplyCount').value() === 0) {
+		res.send(results)
+		return
+	}
+
+	let resupplyWaves = db.get('resupplyWaves').value()
+	resupplyWaves.forEach(wave => {
+		if(!wave.finished) {
+			results.push(wave);
+		}
+	});
 	res.send(results)
 })
 
