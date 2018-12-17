@@ -105,7 +105,7 @@ export default class UnprocessedOrders extends Component {
     
     showLoadingOrButton(){
         if(this.state.loading)
-            return <div class="loader">Loading...</div>
+            return <div className="loader">Loading...</div>
         else
             return  <Button outline color="primary" size="lg" className="float-right" onClick={this.preparePickingWave}>
                             Create picking wave
