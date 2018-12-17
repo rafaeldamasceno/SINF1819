@@ -168,6 +168,16 @@ export function getPickingWave(id){
     })
 }
 
+export function putFinishedPickingList(id){
+    return fetch(`${MATESC_URL}/picking-wave/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
 export function errorMessage(error) {
     if (error) {
         return (
