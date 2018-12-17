@@ -27,7 +27,7 @@ app.post('/picking-wave', (req, res) => {
 	results.timestamp = new Date().toLocaleString()
 	results.finished = false
 	results.waves = warehouse.createWaves(req.body)
-	db.get('pickingWaves').push({ id: results.id, timestamp: results.timestamp, waves: results.waves }).write()
+	db.get('pickingWaves').push({ id: results.id, timestamp: results.timestamp, finished: false, waves: results.waves }).write()
 	db.update('pickingCount', n => n + 1).write()
 	res.send(results)
 })
@@ -41,7 +41,13 @@ app.post('/resupply-wave', (req, res) => {
 
 app.get('/picking-wave', (req, res) => {
 	let results = {}
-	results = db.get('pickingWaves').value()
+	results = db.get('pickingWaves').find({ finished: false }).value()
+	res.send(results)
+})
+
+app.get('/resupply-wave', (req, res) => {
+	let results = {}
+	results = db.get('resupplyWaves').find({ finished: false }).value()
 	res.send(results)
 })
 
@@ -55,6 +61,16 @@ app.get('/resupply-wave/:id', (req, res) => {
 	let results = {}
 	results = db.get('resupplyWaves').find({ id: parseInt(req.params.id) }).value()
 	res.send(results)
+})
+
+app.put('/picking-wave/:id', (req, res) => {
+	db.get('pickingwWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true}).write()
+	res.send(true)
+})
+
+app.put('/resupply-wave/:id', (req, res) => {
+	db.get('resupplyWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true}).write()
+	res.send(true)
 })
 
 app.listen(port, () => console.log(`MATESC API listening on port ${port}!`))
