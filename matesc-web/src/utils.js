@@ -158,6 +158,16 @@ export function getReplenishmentWaves() {
     })
 }
 
+export function getPickingWave(id){
+    return fetch(`${MATESC_URL}/picking-wave/${id}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
 export function errorMessage(error) {
     if (error) {
         return (
@@ -192,6 +202,22 @@ export function createVGR(authentication, Doc_Serie, Doc_Number, entity) {
     body.DataIntroducao = date; 
 
     return fetch(`${PRIMAVERA_URL}/Compras/Docs/TransformDocument/ECF/${Doc_Serie}/${Doc_Number}/000/true`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body: JSON.stringify(body)
+    })
+}
+
+export function createGR(authentication, Doc_Serie, Doc_Number, entity) {
+    let body = {};
+    body.Tipodoc = "GR";
+    body.Serie = "A";
+    body.Entidade = entity;
+    body.TipoEntidade = "C";
+    body.DataDoc = date;
+    body.DataVenc = date; 
+
+    return fetch(`${PRIMAVERA_URL}/Vendas/Docs/TransformDocument/ECL/${Doc_Serie}/${Doc_Number}/000/true`, {
         method: 'POST',
         headers: makeHeaders(authentication),
         body: JSON.stringify(body)

@@ -43,6 +43,8 @@ export default class UnprocessedOrders extends Component {
 
                 let r = await unprocessedClientOrdersFetch(cookies.get('token'));
                 r = await r.json();
+                console.log(r);
+                
                 this.setStateTableData(r);
                 this.setState({
                     updated: true
@@ -52,8 +54,6 @@ export default class UnprocessedOrders extends Component {
                 this.setState({ options: copy })
             }
         }
-
-
     }
 
     async componentDidUpdate() {
