@@ -146,6 +146,17 @@ export function createReplenishmentWave(orders) {
     })
 }
 
+export function getPickingWaves() {
+    return fetch(`${MATESC_URL}/picking-wave`, {
+        method: 'GET'
+    })
+}
+
+export function getReplenishmentWaves() {
+    return fetch(`${MATESC_URL}/resupply-wave`, {
+        method: 'GET'
+    })
+}
 
 export function errorMessage(error) {
     if (error) {
