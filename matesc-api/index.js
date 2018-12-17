@@ -84,7 +84,7 @@ app.get('/resupply-wave/:id', (req, res) => {
 })
 
 app.put('/picking-wave/:id', (req, res) => {
-	db.get('pickingwWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true}).write()
+	db.get('pickingWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true}).write()
 	res.send(true)
 })
 

@@ -7,7 +7,7 @@ import {
 import SearchableTable from "./SearchableTable";
 import Cookies from 'universal-cookie';
 import NavBar from "../NavBar";
-import { getPickingWave, getUrlVars } from "../utils";
+import { getPickingWave, getUrlVars,putFinishedPickingList } from "../utils";
 
 export default class PickingList extends Component {
     constructor(props) {
@@ -25,6 +25,8 @@ export default class PickingList extends Component {
             updated: false,
             loading:false
         };
+
+        this.finishedPicking = this.finishedPicking.bind(this);
     }
 
 
@@ -90,7 +92,7 @@ export default class PickingList extends Component {
             return  <Button outline color='success' size='lg' className='float-right ml-auto' onClick= {this.finishedPicking}>Complete picking</Button>
     }
 
-    finishedPicking(){
+    async finishedPicking(){
 
         this.setState({
             loading: true
@@ -100,6 +102,10 @@ export default class PickingList extends Component {
         //fazer o pedido createGR para cada order
         //pedido a nossa api para meter a picking list finished
         //windows.location.href
+        let id = getUrlVars()['id'];
+        let r = await putFinishedPickingList(id);
+        console.log(await r.json());
+        
         this.setState({
             loading: false
         })
