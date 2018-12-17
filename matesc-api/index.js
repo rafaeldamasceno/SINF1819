@@ -26,7 +26,7 @@ app.post('/picking-wave', (req, res) => {
 	results.id = db.get('pickingCount').value() + 1
 	results.timestamp = new Date().toLocaleString()
 	results.waves = warehouse.createWaves(req.body)
-	db.get('pickingWaves').push({ results }).write()
+	db.get('pickingWaves').push({ id: results.id, timestamp: results.timestamp, waves: results.waves }).write()
 	db.update('pickingCount', n => n + 1).write()
 	res.send(results)
 })
