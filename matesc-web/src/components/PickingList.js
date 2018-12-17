@@ -87,7 +87,7 @@ export default class PickingList extends Component {
         if(this.state.loading)
             return <div class="loader">Loading...</div>
         else
-            return  <Button outline color='success' size='lg' className='float-right ml-auto' onClick= {this.finishedPicking()}>Complete picking</Button>
+            return  <Button outline color='success' size='lg' className='float-right ml-auto' onClick= {this.finishedPicking}>Complete picking</Button>
     }
 
     finishedPicking(){
