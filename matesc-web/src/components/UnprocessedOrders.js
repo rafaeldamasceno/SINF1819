@@ -120,7 +120,11 @@ export default class UnprocessedOrders extends Component {
             let items = await clientOrderContent(cookies.get('token'), id[0], id.substring(1, id.length));
             items = await items.json();
 
-            orders.push(items.DataSet.Table);
+            let order = {};
+            order.id = id;
+            order.items = items.DataSet.Table;
+
+            orders.push(order);
         }
 
         let pickingList = await createPickingWave(orders);
