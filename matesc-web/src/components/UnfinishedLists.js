@@ -7,7 +7,7 @@ import {
 } from 'reactstrap';
 
 import SearchableTable from "./SearchableTable";
-import { itemsInStock, itemsOutOfStock, errorMessage } from '../utils';
+import { getPickingWaves, getReplenishmentWaves, errorMessage } from '../utils';
 import Cookies from 'universal-cookie';
 import NavBar from '../NavBar';
 
@@ -30,8 +30,14 @@ export default class UnfinishedLists extends Component {
                 ["A004", "Calculator"],
                 ["A006", "Stapler"]]
             },
-            options: {
-                link: true,
+            optionsPick: {
+                link: '/picking-list',
+                search: false,
+                searchInput: "",
+                loading: true
+            },
+            optionsReplenish: {
+                link: '/replenishment-list',
                 search: false,
                 searchInput: "",
                 loading: true
@@ -49,25 +55,29 @@ export default class UnfinishedLists extends Component {
         }
 
         if (!this.state.updated) {
-                if (cookies.get('token') !== undefined) {
-                    this.setState({
-                        updated: true
-                    })
+            if (cookies.get('token') !== undefined) {
+                this.setState({
+                    updated: true
+                })
 
-                    //funçao que vai retornar as listas de picking
-                    let r = await itemsInStock(cookies.get('token'));
-                    r = await r.json();
-                    this.setStateItemsInStock(r);
+                //funçao que vai retornar as listas de picking
+                let r = await getPickingWaves();
+                r = await r.json();
+                this.setStatePickingLists(r);
 
-                    //funçao que vai retornar as listas de replenish
-                    r = await itemsOutOfStock(cookies.get('token'));
-                    r = await r.json();
-                    this.setStateItemsOutOfStock(r);
+                //funçao que vai retornar as listas de replenish
+                r = await getReplenishmentWaves();
+                r = await r.json();
+                this.setStateReplenishmentLists(r);
 
-                    let copy = Object.assign({}, this.state.options);
-                    copy.loading = false;
-                    this.setState({options:copy})
-                }
+                let copy = Object.assign({}, this.state.optionsPick);
+                copy.loading = false;
+                this.setState({optionsPick:copy})
+
+                copy = Object.assign({}, this.state.optionsReplenish);
+                copy.loading = false;
+                this.setState({optionsReplenish:copy})
+            }
         }
 
 
@@ -76,83 +86,83 @@ export default class UnfinishedLists extends Component {
         //know if i already updated       
         const cookies = new Cookies(); 
         if (!this.state.updated) {
-                if (cookies.get('token') !== undefined) {
-                    this.setState({
-                        updated: true
-                    })
+            if (cookies.get('token') !== undefined) {
+                this.setState({
+                    updated: true
+                })
 
-                    //picking lists
-                    let r = await itemsInStock(cookies.get('token'));
-                    r = await r.json();
-                    this.setStateItemsInStock(r);
+                //picking lists
+                let r = await getPickingWaves();
+                r = await r.json();
+                this.setStatePickingLists(r);
 
-                    //replenish lists
-                    r = await itemsOutOfStock(cookies.get('token'));
-                    r = await r.json();
-                    this.setStateItemsOutOfStock(r);
+                //replenish lists
+                r = await getReplenishmentWaves();
+                r = await r.json();
+                this.setStateReplenishmentLists(r);
 
-                    let copy = Object.assign({}, this.state.options);
-                    copy.loading = false;
-                    this.setState({options:copy})
-                }
+                let copy = Object.assign({}, this.state.optionsPick);
+                copy.loading = false;
+                this.setState({optionsPick:copy})
+
+                copy = Object.assign({}, this.state.optionsReplenish);
+                copy.loading = false;
+                this.setState({optionsReplenish:copy})
+            }
         }
     }
 
-    setStateItemsInStock(response) {
-        if (!response.DataSet) {
-            this.setState({
-                error: true
-            });
-            return;
-        }
+    setStatePickingLists(response) {
+
+        console.log(response);
+
         let a = [];
         //building state with response
-        for (let i = 0; i < response.DataSet.Table.length; i++) {
-            let lineInfo = response.DataSet.Table[i];
-            let code = lineInfo['Artigo'];
-            let name = lineInfo['Nome'];
-            let location = lineInfo['DescricaoLocalizacao'];
-            let quantity = lineInfo['StkActual'];
-            let line = [code, name, location, quantity];
+        for (let i = 0; i < response.length; i++) {
+            let lineInfo = response[i];
+            let id = lineInfo.id;
+            let creationDate = lineInfo.timestamp;
+            let line = [id, creationDate];
             a.push(line);
         }
-        let copy = Object.assign({}, this.state.tableInStock);
+
+        let copy = Object.assign({}, this.state.tablePickingList);
         copy.tableData = a;
 
         this.setState({
-            tableInStock: copy
+            tablePickingList: copy
         })
     }
 
-    setStateItemsOutOfStock(response) {
-        if (!response.DataSet) {
-            this.setState({
-                error: true
-            });
-            return;
-        }
+    setStateReplenishmentLists(response) {
+        
         let a = [];
         //building state with response
-        for (let i = 0; i < response.DataSet.Table.length; i++) {
-            let lineInfo = response.DataSet.Table[i];
-            let code = lineInfo['Artigo'];
-            let name = lineInfo['Nome'];
-            let location = lineInfo['DescricaoLocalizacao'];
-            let line = [code, name, location];
+        for (let i = 0; i < response.length; i++) {
+            let lineInfo = response[i];
+            let id = lineInfo.id;
+            let creationDate = lineInfo.timestamp;
+            let line = [id, creationDate];
             a.push(line);
         }
-        let copy = Object.assign({}, this.state.tableOutOfStock);
+
+        let copy = Object.assign({}, this.state.tableReplenishList);
         copy.tableData = a;
 
         this.setState({
-            tableOutOfStock: copy
+            tableReplenishList: copy
         })
     }
 
     searchInputUpdateHandle(event) {
-        let copy = Object.assign({}, this.state.options);
+
+        let copy = Object.assign({}, this.state.optionsPick);
         copy.searchInput = event.target.value.toLowerCase()
-        this.setState({ options: copy });
+        this.setState({optionsPick:copy})
+
+        copy = Object.assign({}, this.state.optionsReplenish);
+        copy.searchInput = event.target.value.toLowerCase()
+        this.setState({optionsReplenish:copy})
     }
 
     render() {
@@ -166,8 +176,8 @@ export default class UnfinishedLists extends Component {
                     <Input type="text" placeholder="Search all lists" onChange={this.searchInputUpdateHandle} />
                 </Col>
             </Row>
-            <SearchableTable options={this.state.options} title={this.state.tablePickingList.title} headers={this.state.tablePickingList.tableHeaders} data={this.state.tablePickingList.tableData} />
-            <SearchableTable options={this.state.options} title={this.state.tableReplenishList.title} headers={this.state.tableReplenishList.tableHeaders} data={this.state.tableReplenishList.tableData} />
+            <SearchableTable options={this.state.optionsPick} title={this.state.tablePickingList.title} headers={this.state.tablePickingList.tableHeaders} data={this.state.tablePickingList.tableData} />
+            <SearchableTable options={this.state.optionsReplenish} title={this.state.tableReplenishList.title} headers={this.state.tableReplenishList.tableHeaders} data={this.state.tableReplenishList.tableData} />
         </Container>
         </React.Fragment>);
     }

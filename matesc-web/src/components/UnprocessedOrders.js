@@ -3,7 +3,6 @@ import {
     Container,
     Button
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import SearchableTableCheckbox from "./SearchableTableCheckbox";
 import NavBar from "../NavBar"
@@ -24,7 +23,8 @@ export default class UnprocessedOrders extends Component {
                 loading: true
             },
             updated: false,
-            error:false
+            error:false,
+            loading:false
         };
         this.checkedHandler = this.checkedHandler.bind(this);
         this.preparePickingWave = this.preparePickingWave.bind(this);
@@ -43,6 +43,8 @@ export default class UnprocessedOrders extends Component {
 
                 let r = await unprocessedClientOrdersFetch(cookies.get('token'));
                 r = await r.json();
+                console.log(r);
+                
                 this.setStateTableData(r);
                 this.setState({
                     updated: true
@@ -52,8 +54,6 @@ export default class UnprocessedOrders extends Component {
                 this.setState({ options: copy })
             }
         }
-
-
     }
 
     async componentDidUpdate() {
@@ -102,6 +102,16 @@ export default class UnprocessedOrders extends Component {
         });
     }
 
+    
+    showLoadingOrButton(){
+        if(this.state.loading)
+            return <div className="loader">Loading...</div>
+        else
+            return  <Button outline color="primary" size="lg" className="float-right" onClick={this.preparePickingWave}>
+                            Create picking wave
+                    </Button>
+    }
+
     async preparePickingWave() {
         const cookies = new Cookies();
         if (!this.state.checkedOrders) {
@@ -111,6 +121,10 @@ export default class UnprocessedOrders extends Component {
         if (this.state.checkedOrders.length === 0) {
             return;
         }
+
+        this.setState({
+            loading:true
+        });
 
         let orders = [];
 
@@ -128,7 +142,13 @@ export default class UnprocessedOrders extends Component {
         }
 
         let pickingList = await createPickingWave(orders);
-        console.log(await pickingList.json());
+        let pickingListInfo = await pickingList.json();
+        let pickingListId = await pickingListInfo.id;
+        this.setState({
+            loading:false
+        });
+
+        window.location.href = '/picking-list?id=' + pickingListId;
     }
 
     render() {
@@ -138,11 +158,7 @@ export default class UnprocessedOrders extends Component {
                 <Container>
                     {errorMessage(this.state.error)}
                     <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler={this.checkedHandler} />
-                    <Link to="/picking-list">
-                        <Button outline color="primary" size="lg" className="float-right" onClick={this.preparePickingWave}>
-                            Create picking wave
-                    </Button>
-                    </Link>
+                    {this.showLoadingOrButton()}
                 </Container>
             </React.Fragment>
         );

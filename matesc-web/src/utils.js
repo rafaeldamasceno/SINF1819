@@ -142,10 +142,53 @@ export function createPickingWave(orders) {
 export function createReplenishmentWave(orders) {
     return fetch(`${MATESC_URL}/resupply-wave`, {
         method: 'POST',
-        body: JSON.stringify(orders)
+        body: JSON.stringify(orders),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
     })
 }
 
+export function getPickingWaves() {
+    return fetch(`${MATESC_URL}/picking-wave`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function getReplenishmentWaves() {
+    return fetch(`${MATESC_URL}/resupply-wave`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function getPickingWave(id){
+    return fetch(`${MATESC_URL}/picking-wave/${id}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function putFinishedPickingList(id){
+    return fetch(`${MATESC_URL}/picking-wave/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+}
 
 export function errorMessage(error) {
     if (error) {
@@ -181,6 +224,22 @@ export function createVGR(authentication, Doc_Serie, Doc_Number, entity) {
     body.DataIntroducao = date; 
 
     return fetch(`${PRIMAVERA_URL}/Compras/Docs/TransformDocument/ECF/${Doc_Serie}/${Doc_Number}/000/true`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body: JSON.stringify(body)
+    })
+}
+
+export function createGR(authentication, Doc_Serie, Doc_Number, entity) {
+    let body = {};
+    body.Tipodoc = "GR";
+    body.Serie = "A";
+    body.Entidade = entity;
+    body.TipoEntidade = "C";
+    body.DataDoc = date;
+    body.DataVenc = date; 
+
+    return fetch(`${PRIMAVERA_URL}/Vendas/Docs/TransformDocument/ECL/${Doc_Serie}/${Doc_Number}/000/true`, {
         method: 'POST',
         headers: makeHeaders(authentication),
         body: JSON.stringify(body)
