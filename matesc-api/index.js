@@ -38,7 +38,7 @@ app.post('/resupply-wave', (req, res) => {
 	results.timestamp = new Date().toLocaleString()
 	results.finished = false
 	results.waves = warehouse.createWaves(req.body, true)
-	db.get('resupplyCount').push(results).write()
+	db.get('resupplyWaves').push(results).write()
 	db.update('resupplyCount', n => n + 1).write()
 	res.send(results)
 })
