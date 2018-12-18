@@ -76,13 +76,17 @@ app.get('/resupply-wave/:id', (req, res) => {
 })
 
 app.put('/picking-wave/:id', (req, res) => {
-	db.get('pickingWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true }).write()
-	res.send(true)
+	let results = {}
+	results = db.get('pickingWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true }).value()
+	db.write()
+	res.send(results)
 })
 
 app.put('/resupply-wave/:id', (req, res) => {
-	db.get('resupplyWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true }).write()
-	res.send(true)
+	let results = {}
+	results = db.get('resupplyWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true }).value()
+	db.write()
+	res.send(results)
 })
 
 app.listen(port, () => console.log(`MATESC API listening on port ${port}!`))
