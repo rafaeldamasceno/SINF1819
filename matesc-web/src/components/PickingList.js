@@ -7,12 +7,12 @@ import {
 import SearchableTable from "./SearchableTable";
 import Cookies from 'universal-cookie';
 import NavBar from "../NavBar";
-import { getPickingWave, getUrlVars,putFinishedPickingList } from "../utils";
+import { getPickingWave, getUrlVars,putFinishedPickingList,clientOrderInfoContent,createGR } from "../utils";
 
 export default class PickingList extends Component {
     constructor(props) {
         super(props);
-
+        this.ordersIDs=[];
         this.state = {
             title: "",
             tableHeaders: [{ name: "Order ID" }, { name: "Product Code" }, { name: "Product Name" }, { name: "Location" }, { name: "Quantity" }],
@@ -68,6 +68,9 @@ export default class PickingList extends Component {
         for (const wave of waves) {
             let row = [];
             for(const item of wave){
+                if(!this.ordersIDs.includes(item.order)){
+                    this.ordersIDs.push(item.order);
+                }
                 row.push([ item.order ,item.Artigo, item.Descricao, item.DescricaoLocalizacao , item.Quantidade]);
             }
             pickingWaves.push(row);
@@ -100,15 +103,27 @@ export default class PickingList extends Component {
         //TODO
         //pedido ao primavera para obter a entidade a partir do order id
         //fazer o pedido createGR para cada order
-        //pedido a nossa api para meter a picking list finished
+
         //windows.location.href
         let id = getUrlVars()['id'];
-        let r = await putFinishedPickingList(id);
-        console.log(await r.json());
+        //pedido a nossa api para meter a picking list finished
+        await putFinishedPickingList(id);
+        const cookies = new Cookies();
+
+        let token = cookies.get('token')
+        for (const orderId of this.ordersIDs) {
+            let r = await clientOrderInfoContent(token,orderId[0],orderId.substring(1,orderId.length));
+            r = await r.json();
+            let entity = r.DataSet.Table[0].Entidade;
+            r = await createGR(token,orderId[0],orderId.substring(1,orderId.length),entity);
+            console.log(r)           
+        }
         
         this.setState({
             loading: false
         })
+
+        window.location.href = '/unfinished-lists';
     }
 
     render() {
