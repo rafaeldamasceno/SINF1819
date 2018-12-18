@@ -34,8 +34,12 @@ app.post('/picking-wave', (req, res) => {
 
 app.post('/resupply-wave', (req, res) => {
 	let results = {}
-	results.waveId = db.get('resupplyCount').value() + 1
-	db.get('resupplyWaves').push({ id: results.waveId }).write()
+	results.id = db.get('resupplyCount').value() + 1
+	results.timestamp = new Date().toLocaleString()
+	results.finished = false
+	results.waves = warehouse.createWaves(req.body, true)
+	db.get('resupplyCount').push(results).write()
+	db.update('resupplyCount', n => n + 1).write()
 	res.send(results)
 })
 
