@@ -151,7 +151,7 @@ export function createReplenishmentWave(orders) {
 }
 
 export function getPickingWaves() {
-    return fetch(`${MATESC_URL}/picking-wave`, {
+    return fetch(`${MATESC_URL}/picking-wave/unfinished`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',

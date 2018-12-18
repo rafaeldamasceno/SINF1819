@@ -147,30 +147,30 @@ export default class SupplierOrderContent extends Component {
                             <h1>Supplier order info</h1>
                         </Col>
                         <Col xs='1' className='ml-auto mr-2'>
-                            <Button><i class="fas fa-print"></i> Print</Button>
+                            <Button><i className="fas fa-print"></i> Print</Button>
                         </Col>
                     </Row>
-                    <div class='order-info'>
+                    <div className='order-info'>
                         <p>
-                            <span class='font-weight-bold mr-1'>
+                            <span className='font-weight-bold mr-1'>
                                 ID:
                     </span>
                             {this.state.orderInfo.ID}
                         </p>
                         <p>
-                            <span class='font-weight-bold mr-1'>
+                            <span className='font-weight-bold mr-1'>
                                 Arrival:
                     </span>
                             {this.state.orderInfo.arrivalDate}
                         </p>
                         <p>
-                            <span class='font-weight-bold mr-1'>
+                            <span className='font-weight-bold mr-1'>
                                 Supplier:
                     </span>
                             {this.state.orderInfo.supplier}
                         </p>
                         <p>
-                            <span class='font-weight-bold mr-1'>
+                            <span className='font-weight-bold mr-1'>
                                 Total:
                     </span>
                             {this.state.orderInfo.total}

@@ -110,7 +110,7 @@ export default class SearchableTable extends Component {
         if (this.props.options.print) {
             return (
                 <Col xs='1' className='ml-auto mr-2'>
-                    <Button><i class="fas fa-print"></i> Print</Button>
+                    <Button><i className="fas fa-print"></i> Print</Button>
                 </Col>
             )
         }
@@ -118,7 +118,7 @@ export default class SearchableTable extends Component {
 
     showTableOrLoading(){
         if(this.props.options.loading){
-            return <div class="loader">Loading...</div>            
+            return <div className="loader">Loading...</div>            
         }else{
             return <Table striped>
                 <thead>

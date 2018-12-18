@@ -22,7 +22,7 @@ export default class Login extends Component {
 
     showLoadingOrButton(){
         if(this.state.loading)
-            return <div class="loader">Loading...</div>
+            return <div className="loader">Loading...</div>
         else
             return <Button>Submit</Button>
     }
@@ -65,7 +65,7 @@ export default class Login extends Component {
             <Form className="form" onSubmit={this.validateInput}>
                 <Col>
                     <FormGroup>
-                        <input class="form-control" 
+                        <input className="form-control" 
                             ref={(username) => this.username = username} 
                             type="text"
                             id="username"
@@ -75,7 +75,7 @@ export default class Login extends Component {
                 </Col>
                 <Col>
                     <FormGroup>
-                    <input class="form-control" 
+                    <input className="form-control" 
                             ref={(password) => this.password = password} 
                             type="password"
                             id="password"

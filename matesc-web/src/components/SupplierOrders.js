@@ -98,7 +98,7 @@ export default class SupplierOrders extends Component {
 
     showLoadingOrButton() {
         if(this.state.loading) {
-            return <div class="loader">Loading...</div>;
+            return <div className="loader">Loading...</div>;
         } else {
             return <Button outline color='primary' size='lg' className='float-right' onClick={this.prepareTransformDoc}>Confirm Arrival</Button>;
         }
