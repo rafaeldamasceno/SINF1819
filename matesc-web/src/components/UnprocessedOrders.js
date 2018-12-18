@@ -39,12 +39,9 @@ export default class UnprocessedOrders extends Component {
           }
         if (!this.state.updated) {
             if (cookies.get('token') !== undefined) {
-                console.log(cookies.get('token'));
-
                 let r = await unprocessedClientOrdersFetch(cookies.get('token'));
                 r = await r.json();
-                console.log(r);
-                
+    
                 this.setStateTableData(r);
                 this.setState({
                     updated: true

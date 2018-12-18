@@ -81,8 +81,11 @@ export default class ReplenishmentList extends Component {
 
     showTables(){
         let children = [];
+        let i = 1;
         for(const table of this.state.tablesData){
+            children.push(<h4>Wave {i}</h4>)
             children.push(<SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={table}></SearchableTable>);
+            i++;
         }
         return children;
     }
@@ -113,12 +116,10 @@ export default class ReplenishmentList extends Component {
         for(let i = 0; i < tables.length; i++) {
             for(let j = 0; j < tables[i].length; j++) {
                 let row = tables[i][j];
-                console.log(row);
 
                 let location = await getItemLocation(token,row[0]);
                 location = await location.json();
                 location = await location.DataSet.Table[0].Localizacao;
-                console.log(location);
 
                 let item = {};
                 item.id = row[0];
@@ -129,7 +130,7 @@ export default class ReplenishmentList extends Component {
         }
 
         let r = await transferWarehouse(token, items);
-        r = await r.json();
+        await r.json();
         
         this.setState({
             loading: false

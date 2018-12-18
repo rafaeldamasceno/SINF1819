@@ -52,6 +52,10 @@ export default class PickingList extends Component {
         //know if i already updated
         const cookies = new Cookies();
 
+        if (!cookies.get('token')) {
+            window.location.href = '/login';
+        }
+
         if (!this.state.updated) {
             let id = getUrlVars()['id'];
             let r = await getPickingWave(id);
@@ -82,8 +86,11 @@ export default class PickingList extends Component {
 
     showTables(){
         let children = [];
+        let i = 1;
         for(const table of this.state.tablesData){
+            children.push(<h4>Wave {i}</h4>)
             children.push(<SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={table}></SearchableTable>);
+            i++;
         }
         return children;
     }
@@ -115,8 +122,7 @@ export default class PickingList extends Component {
             let r = await clientOrderInfoContent(token,orderId[0],orderId.substring(1,orderId.length));
             r = await r.json();
             let entity = r.DataSet.Table[0].Entidade;
-            r = await createGR(token,orderId[0],orderId.substring(1,orderId.length),entity);
-            console.log(r)           
+            r = await createGR(token,orderId[0],orderId.substring(1,orderId.length),entity);         
         }
         
         this.setState({

@@ -127,13 +127,14 @@ export default class ProductsToStore extends Component {
          }
  
          let replenishmentList = await createReplenishmentWave(items);
-         console.log(await replenishmentList.json());
+         let info = await replenishmentList.json();
+         let id = await info.id;
 
          this.setState({
             loading: false
         })
 
-        window.location.href='/unfinished-lists'
+        window.location.href=`/replenishment-list?id=${id}`;
      }
 
      showLoadingOrButton(){

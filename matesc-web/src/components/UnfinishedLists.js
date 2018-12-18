@@ -114,8 +114,6 @@ export default class UnfinishedLists extends Component {
 
     setStatePickingLists(response) {
 
-        console.log(response);
-
         let a = [];
         //building state with response
         for (let i = 0; i < response.length; i++) {

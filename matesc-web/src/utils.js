@@ -80,7 +80,6 @@ export function getItem(authentication, item, warehouse){
 }
 
 export function getItemLocation(authentication,id) {
-    console.log(id);
     return query(authentication, `SELECT LocalizacaoSugestao as Localizacao FROM Artigo WHERE Artigo='${id}'`)
 }
 
@@ -157,7 +156,6 @@ export function putFinishedPickingList(id){
 }
 
 export function putFinishedReplenishmentList(id){
-    console.log(id);
     return fetch(`${MATESC_URL}/resupply-wave/${id}`, {
         method: 'PUT',
         headers: {
