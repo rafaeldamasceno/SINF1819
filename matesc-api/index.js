@@ -54,14 +54,13 @@ app.get('/picking-wave/unfinished', (req, res) => {
 })
 
 app.get('/resupply-wave', (req, res) => {
-	let results = []
-	res.send(results)
+	let resupplyWaves = db.get('resupplyWaves').value()
+	res.send(resupplyWaves)
 })
 
 app.get('/picking-wave/:id', (req, res) => {
-	let results = {}
-	results = db.get('pickingWaves').find({ id: parseInt(req.params.id) }).value()
-	res.send(results)
+	let resupplyWaves = db.get('resupplyWaves').filter({ finished: false }).value()
+	res.send(resupplyWaves)
 })
 
 app.get('/resupply-wave/:id', (req, res) => {
