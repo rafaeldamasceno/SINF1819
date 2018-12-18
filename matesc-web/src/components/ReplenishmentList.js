@@ -6,38 +6,146 @@ import {
 } from 'reactstrap';
 import SearchableTable from "./SearchableTable";
 import Cookies from 'universal-cookie';
+import NavBar from "../NavBar";
+import { getUrlVars, getReplenishmentWave, transferWarehouse, putFinishedReplenishmentList, getItemLocation } from "../utils.js"
 
 export default class ReplenishmentList extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            title: "Replenishment list",
-            tableHeaders: [{ name: "Order ID" }, { name: "Product Code" }, { name: "Product Name" }, { name: "Location" }, { name: "Quantity" }],
-            tableData: [["A53", "A001", "Binder", "Corridor 1, Shelf 2, L","153"],
-                ["A43", "A003", "Stapler", "Corridor 3, Shelf 2, L","50"],
-                ["A26", "A004", "Calculator", "Corridor 2, Shelf 1, R", "13"]],
+            title: "",
+            tableHeaders: [{ name: "Product Code" }, { name: "Product Name" }, { name: "Location" }, { name: "Quantity" }],
+            tablesData: [[[]]],
             options: {
-                link: '/supplier-order-content',
-                search:true,
-                print:true
-            }
+                link: false,
+                search:false,
+                print:false
+            },
+            updated: false,
+            loading:false
         };
+
+        this.finishedReplenishment = this.finishedReplenishment.bind(this);
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         const cookies = new Cookies();
 
         if(!cookies.get('token')){
             window.location.href = '/login';
-          }
+        }
+
+        if (!this.state.updated) {
+            let id = getUrlVars()['id'];
+            let r = await getReplenishmentWave(id);
+            r = await r.json();
+            this.setState({
+                updated: true
+            })
+            this.setStateTableData(r.waves);
+        }
+    }
+
+    async componentDidUpdate() {
+        const cookies = new Cookies();
+
+        if(!cookies.get('token')){
+            window.location.href = '/login';
+        }
+
+        if (!this.state.updated) {
+            let id = getUrlVars()['id'];
+            let r = await getReplenishmentWave(id);
+            r = await r.json();
+            this.setState({
+                updated: true
+            })
+            this.setStateTableData(r.waves);
+        }
+    }
+
+    setStateTableData(waves){
+        let replenishmentWaves = [];
+        for (const wave of waves) {
+            let row = [];
+            for(const item of wave){
+                row.push([ item.Artigo, item.Descricao, item.DescricaoLocalizacao , item.StkActual]);
+            }
+            replenishmentWaves.push(row);
+        }
+        this.setState({
+            tablesData: replenishmentWaves
+        })
+    }
+
+    showTables(){
+        let children = [];
+        for(const table of this.state.tablesData){
+            children.push(<SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={table}></SearchableTable>);
+        }
+        return children;
+    }
+
+    showLoadingOrButton(){
+        if(this.state.loading)
+            return <div className="loader">Loading...</div>
+        else
+            return  <Button outline color='success' size='lg' className='float-right ml-auto' onClick= {this.finishedReplenishment}>Complete replenishment</Button>
+    }
+
+    async finishedReplenishment() {
+
+        this.setState({
+            loading: true
+        })
+        
+        let id = getUrlVars()['id'];
+        
+        //pedido a nossa api para meter a replenishment list finished
+        await putFinishedReplenishmentList(id);
+        const cookies = new Cookies();
+
+        let token = cookies.get('token')
+
+        let items = [];
+        let tables = this.state.tablesData;
+        for(let i = 0; i < tables.length; i++) {
+            for(let j = 0; j < tables[i].length; j++) {
+                let row = tables[i][j];
+                console.log(row);
+
+                let location = await getItemLocation(token,row[0]);
+                location = await location.json();
+                location = await location.DataSet.Table[0].Localizacao;
+                console.log(location);
+
+                let item = {};
+                item.id = row[0];
+                item.location = location;
+                item.quantity = row[3];
+                items.push(item);
+            }
+        }
+
+        let r = await transferWarehouse(token, items);
+        r = await r.json();
+        
+        this.setState({
+            loading: false
+        })
+
+        window.location.href = '/unfinished-lists';
     }
 
     render() {
+        let id = getUrlVars()['id'];
         return (<Container>
-            <SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={this.state.tableData}></SearchableTable>
+            <NavBar />
+            <h1>Replenishment List - {id} </h1>
+            {this.showTables()}
             <Row>
-                <Button outline color='success' size='lg' className='float-right ml-auto'>Complete Replenishment</Button>
+                {this.showLoadingOrButton()}
             </Row>
         </Container>)
     }

@@ -22,7 +22,8 @@ export default class ProductsToStore extends Component {
                 loading: true,
                 link:false
             },
-            updated: false
+            updated: false,
+            loading: false
         };
         this.checkedHandler = this.checkedHandler.bind(this);
         this.prepareReplenishmentWave = this.prepareReplenishmentWave.bind(this);
@@ -109,6 +110,10 @@ export default class ProductsToStore extends Component {
          if(this.state.checkedOrders.length === 0) {
              return;
          } 
+
+         this.setState({
+            loading: true
+        })
  
          let items = [];
  
@@ -123,14 +128,27 @@ export default class ProductsToStore extends Component {
  
          let replenishmentList = await createReplenishmentWave(items);
          console.log(await replenishmentList.json());
+
+         this.setState({
+            loading: false
+        })
+
+        window.location.href='/unfinished-lists'
      }
+
+     showLoadingOrButton(){
+        if(this.state.loading)
+            return <div className="loader">Loading...</div>
+        else
+            return <Button outline color='primary' size='lg' className='float-right' onClick={this.prepareReplenishmentWave}>Create Replenishment Wave</Button>
+    }
 
     render() {
         return (
             <Container>
                 <NavBar />
                 <SearchableTableCheckbox options={this.state.options} title={this.state.title} headers={this.state.headers} data={this.state.data} checkedHandler={this.checkedHandler} />
-                <Button outline color='primary' size='lg' className='float-right' onClick={this.prepareReplenishmentWave}>Confirm Arrival</Button>
+                {this.showLoadingOrButton()}
             </Container>)
     }
 }

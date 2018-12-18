@@ -72,11 +72,16 @@ export function itemsOutOfStock(authentication) {
 }
 
 export function itemsToStore(authentication){
-    return query(authentication, `SELECT Armazem, Artigos.*, ISNULL(V_INV_ArtigoArmazem.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem INNER JOIN (SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigo.Artigo , Artigo.Descricao FROM Artigo INNER JOIN ArmazemLocalizacoes ON ArmazemLocalizacoes.Localizacao = Artigo.LocalizacaoSugestao) AS Artigos ON V_INV_ArtigoArmazem.Artigo=Artigos.Artigo AND V_INV_ArtigoArmazem.Armazem='A2'`)
+    return query(authentication, `SELECT Armazem, Artigos.*, ISNULL(V_INV_ArtigoArmazem.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem INNER JOIN (SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigo.Artigo , Artigo.Descricao FROM Artigo INNER JOIN ArmazemLocalizacoes ON ArmazemLocalizacoes.Localizacao = Artigo.LocalizacaoSugestao) AS Artigos ON V_INV_ArtigoArmazem.Artigo=Artigos.Artigo AND V_INV_ArtigoArmazem.Armazem='A2' AND NOT StkActual=0`)
 }
 
 export function getItem(authentication, item, warehouse){
     return query(authentication, `SELECT Armazem, Artigos.*, ISNULL(V_INV_ArtigoArmazem.StkActual, 0) AS StkActual, (PesoUnit * StkActual) as PesoTotal, (VolumeUnit * StkActual) as VolumeTotal FROM V_INV_ArtigoArmazem INNER JOIN (SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigo.Artigo , Artigo.Descricao, ArmazemLocalizacoes.Localizacao, Artigo.Peso as PesoUnit, Artigo.Volume as VolumeUnit FROM Artigo INNER JOIN ArmazemLocalizacoes ON ArmazemLocalizacoes.Localizacao = Artigo.LocalizacaoSugestao) AS Artigos ON V_INV_ArtigoArmazem.Artigo=Artigos.Artigo AND V_INV_ArtigoArmazem.Armazem='${warehouse}' AND Artigos.Artigo='${item}'`)
+}
+
+export function getItemLocation(authentication,id) {
+    console.log(id);
+    return query(authentication, `SELECT LocalizacaoSugestao as Localizacao FROM Artigo WHERE Artigo='${id}'`)
 }
 
 export function createPickingWave(orders) {
@@ -112,7 +117,7 @@ export function getPickingWaves() {
 }
 
 export function getReplenishmentWaves() {
-    return fetch(`${MATESC_URL}/resupply-wave`, {
+    return fetch(`${MATESC_URL}/resupply-wave/unfinished`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -151,13 +156,55 @@ export function putFinishedPickingList(id){
     })
 }
 
-export function transferWarehouse() {
+export function putFinishedReplenishmentList(id){
+    console.log(id);
+    return fetch(`${MATESC_URL}/resupply-wave/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export function transferWarehouse(authentication, items) {
     let body = {};
     body.TipoDoc = "TRA";
     body.Serie = "A";
     body.Data = date();
     body.Moeda = "EUR";
     body.LinhasOrigem = [];
+
+    items.forEach(item => {
+        let oldLocation = {};
+        oldLocation.Artigo = item.id;
+        oldLocation.Armazem = 'A2';
+        oldLocation.Localizacao = 'A2';
+        oldLocation.Lote = '';
+        oldLocation.Quantidade = item.quantity;
+        oldLocation.PrecUnit = 0;
+        oldLocation.INV_EstadoOrigem = "DISP";
+        oldLocation.LinhasDestino = [];
+
+        let newLocation = {};
+        newLocation.Artigo = item.id;
+        newLocation.Armazem = 'A1';
+        newLocation.Localizacao = item.location;
+        newLocation.Lote = '';
+        newLocation.Quantidade = item.quantity;
+        newLocation.PrecUnit = 0;
+        newLocation.INV_EstadoDestino = "DISP";
+        oldLocation.LinhasDestino.push(newLocation);
+
+        body.LinhasOrigem.push(oldLocation);
+    })
+
+    return fetch(`${PRIMAVERA_URL}/Inventario/Transferencias/CreateTransfer`, {
+        method: 'POST',
+        headers: makeHeaders(authentication),
+        body: JSON.stringify(body)
+    });
+
 }
 
 export function errorMessage(error) {
