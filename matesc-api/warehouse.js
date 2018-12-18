@@ -230,9 +230,9 @@ function flattenAndAddOrderId(orders) {
 	return items
 }
 
-function createWaves(orders) {
+function createWaves(orders, resupply = false) {
 	let waves = []
-	let split = splitItems(flattenAndAddOrderId(orders), 150, 0.1, 10)
+	let split = splitItems(resupply ? [].concat.apply([], orders) : flattenAndAddOrderId(orders), 150, 0.1, 10)
 
 	split.forEach(element => {
 		let path = getPath(element.locations)

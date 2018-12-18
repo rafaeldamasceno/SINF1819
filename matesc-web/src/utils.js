@@ -43,7 +43,7 @@ export function unprocessedClientOrdersFetch(authentication) {
     return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body: JSON.stringify("SELECT CONCAT(CD.Serie, CD.NumDoc) as OrderId, CD.Entidade, CD.Nome, CD.Data, CDS.Estado FROM CabecDoc CD INNER JOIN CabecDocStatus CDS ON CDS.IdCabecDoc = CD.Id AND CD.TipoDoc = 'ECL' AND CDS.Anulado = 'false' AND CDS.Fechado = 'false' AND CDS.Estado = 'P'")
+        body: `"SELECT CONCAT(CD.Serie, CD.NumDoc) as OrderId, CD.Entidade, CD.Nome, CD.Data, CDS.Estado FROM CabecDoc CD INNER JOIN CabecDocStatus CDS ON CDS.IdCabecDoc = CD.Id AND CD.TipoDoc = 'ECL' AND CDS.Anulado = 'false' AND CDS.Fechado = 'false' AND CDS.Estado = 'P'"`
     });
 }
 
@@ -51,8 +51,7 @@ export function unprocessedSuppliersOrdersFetch(authentication) {
     return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body: JSON.stringify("SELECT CONCAT(CC.Serie, CC.NumDoc) as OrderId, CC.Entidade, CC.Nome, CC.DataDoc, CCS.Estado FROM CabecCompras CC INNER JOIN CabecComprasStatus CCS ON CCS.IdCabecCompras = CC.Id AND CC.TipoDoc = 'ECF' AND CCS.Anulado = 'false' AND CCS.Fechado = 'false' AND CCS.Estado = 'P'"
-        )
+        body: `"SELECT CONCAT(CC.Serie, CC.NumDoc) as OrderId, CC.Entidade, CC.Nome, CC.DataDoc, CCS.Estado FROM CabecCompras CC INNER JOIN CabecComprasStatus CCS ON CCS.IdCabecCompras = CC.Id AND CC.TipoDoc = 'ECF' AND CCS.Anulado = 'false' AND CCS.Fechado = 'false' AND CCS.Estado = 'P'"`
     });
 }
 
@@ -60,8 +59,7 @@ export async function supplierOrderInfoContent(authentication, Doc_Serie, Doc_Nu
     return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body: JSON.stringify(`SELECT CONCAT(CC.Serie, CC.NumDoc) as OrderId, CC.DataDoc, CC.Nome, CC.Entidade, SUM(LC.PrecUnit*LC.Quantidade + LC.TotalIva) as PrecoTotal FROM LinhasCompras LC INNER JOIN CabecCompras CC ON LC.IdCabecCompras = CC.Id WHERE CC.Serie = '${Doc_Serie}' AND CC.NumDoc = ${Doc_Number} AND CC.TipoDoc = 'ECF' GROUP BY CC.DataDoc, CC.Nome, CC.Entidade, CC.Id, CC.Serie, CC.NumDoc`
-        )
+        body: `"SELECT CONCAT(CC.Serie, CC.NumDoc) as OrderId, CC.DataDoc, CC.Nome, CC.Entidade, SUM(LC.PrecUnit*LC.Quantidade + LC.TotalIva) as PrecoTotal FROM LinhasCompras LC INNER JOIN CabecCompras CC ON LC.IdCabecCompras = CC.Id WHERE CC.Serie = '${Doc_Serie}' AND CC.NumDoc = ${Doc_Number} AND CC.TipoDoc = 'ECF' GROUP BY CC.DataDoc, CC.Nome, CC.Entidade, CC.Id, CC.Serie, CC.NumDoc"`
     });
 }
 
@@ -69,8 +67,7 @@ export function supplierOrderContent(authentication, Doc_Serie, Doc_Number) {
     return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body: JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigos.* FROM ArmazemLocalizacoes INNER JOIN (SELECT ArtigosLinhas.*, (Artigo.Peso * ArtigosLinhas.Quantidade) as PesoTotal, (Artigo.Volume * ArtigosLinhas.Quantidade) as VolumeTotal, Artigo.Peso as PesoUnit, Artigo.Volume as VolumeUnit FROM Artigo INNER JOIN (SELECT LC.Artigo, LC.Descricao, LC.Localizacao, LC.Quantidade FROM LinhasCompras LC INNER JOIN CabecCompras CC ON LC.IdCabecCompras = CC.Id WHERE CC.Serie = '${Doc_Serie}' AND CC.NumDoc = ${Doc_Number} AND CC.TipoDoc = 'ECF') as ArtigosLinhas ON ArtigosLinhas.Artigo = Artigo.Artigo) as Artigos ON ArmazemLocalizacoes.Localizacao = Artigos.Localizacao`
-        )
+        body: `"SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigos.* FROM ArmazemLocalizacoes INNER JOIN (SELECT ArtigosLinhas.*, (Artigo.Peso * ArtigosLinhas.Quantidade) as PesoTotal, (Artigo.Volume * ArtigosLinhas.Quantidade) as VolumeTotal, Artigo.Peso as PesoUnit, Artigo.Volume as VolumeUnit FROM Artigo INNER JOIN (SELECT LC.Artigo, LC.Descricao, LC.Localizacao, LC.Quantidade FROM LinhasCompras LC INNER JOIN CabecCompras CC ON LC.IdCabecCompras = CC.Id WHERE CC.Serie = '${Doc_Serie}' AND CC.NumDoc = ${Doc_Number} AND CC.TipoDoc = 'ECF') as ArtigosLinhas ON ArtigosLinhas.Artigo = Artigo.Artigo) as Artigos ON ArmazemLocalizacoes.Localizacao = Artigos.Localizacao"`
     });
 }
 
@@ -78,8 +75,7 @@ export async function clientOrderInfoContent(authentication, Doc_Serie, Doc_Numb
     return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body: JSON.stringify(`SELECT CONCAT(CD.Serie, CD.NumDoc) as OrderId, CD.Data, CD.Nome, CD.Entidade, SUM(LD.PrecUnit*LD.Quantidade + LD.TotalIva) as PrecoTotal FROM LinhasDoc LD INNER JOIN CabecDoc CD ON LD.IdCabecDoc = CD.Id WHERE CD.Serie = '${Doc_Serie}' AND CD.NumDoc = ${Doc_Number} AND CD.TipoDoc = 'ECL' GROUP BY CD.Data, CD.Nome, CD.Entidade, CD.Id, CD.Serie, CD.NumDoc`
-        )
+        body: `"SELECT CONCAT(CD.Serie, CD.NumDoc) as OrderId, CD.Data, CD.Nome, CD.Entidade, SUM(LD.PrecUnit*LD.Quantidade + LD.TotalIva) as PrecoTotal FROM LinhasDoc LD INNER JOIN CabecDoc CD ON LD.IdCabecDoc = CD.Id WHERE CD.Serie = '${Doc_Serie}' AND CD.NumDoc = ${Doc_Number} AND CD.TipoDoc = 'ECL' GROUP BY CD.Data, CD.Nome, CD.Entidade, CD.Id, CD.Serie, CD.NumDoc"`
     });
 }
 
@@ -87,8 +83,7 @@ export function clientOrderContent(authentication, Doc_Serie, Doc_Number) {
     return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body: JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigos.* FROM ArmazemLocalizacoes INNER JOIN (SELECT ArtigosLinhas.*, (Artigo.Peso * ArtigosLinhas.Quantidade) as PesoTotal, (Artigo.Volume * ArtigosLinhas.Quantidade) as VolumeTotal, Artigo.Peso as PesoUnit, Artigo.Volume as VolumeUnit FROM Artigo INNER JOIN (SELECT LD.Artigo, LD.Descricao, LD.Localizacao, LD.Quantidade FROM LinhasDoc LD INNER JOIN CabecDoc CD ON LD.IdCabecDoc = CD.Id WHERE CD.Serie = '${Doc_Serie}' AND CD.NumDoc = ${Doc_Number} AND CD.TipoDoc = 'ECL') as ArtigosLinhas ON ArtigosLinhas.Artigo = Artigo.Artigo) as Artigos ON ArmazemLocalizacoes.Localizacao = Artigos.Localizacao`
-        )
+        body: `"SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigos.* FROM ArmazemLocalizacoes INNER JOIN (SELECT ArtigosLinhas.*, (Artigo.Peso * ArtigosLinhas.Quantidade) as PesoTotal, (Artigo.Volume * ArtigosLinhas.Quantidade) as VolumeTotal, Artigo.Peso as PesoUnit, Artigo.Volume as VolumeUnit FROM Artigo INNER JOIN (SELECT LD.Artigo, LD.Descricao, LD.Localizacao, LD.Quantidade FROM LinhasDoc LD INNER JOIN CabecDoc CD ON LD.IdCabecDoc = CD.Id WHERE CD.Serie = '${Doc_Serie}' AND CD.NumDoc = ${Doc_Number} AND CD.TipoDoc = 'ECL') as ArtigosLinhas ON ArtigosLinhas.Artigo = Artigo.Artigo) as Artigos ON ArmazemLocalizacoes.Localizacao = Artigos.Localizacao"`
     });
 }
 
@@ -96,8 +91,7 @@ export function itemsInStock(authentication) {
     return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body: JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, ArtigoArmazem.* FROM ArmazemLocalizacoes INNER JOIN (SELECT Inv.Artigo, A.Descricao as Nome, Inv.Localizacao as Localizacao, ISNULL(Inv.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem Inv INNER JOIN Artigo A ON Inv.Artigo = A.Artigo WHERE Inv.StkActual IS NOT NULL AND Inv.StkActual > 0) as ArtigoArmazem ON ArmazemLocalizacoes.Localizacao = ArtigoArmazem.Localizacao`
-        )
+        body: `"SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, ArtigoArmazem.* FROM ArmazemLocalizacoes INNER JOIN (SELECT Inv.Artigo, A.Descricao as Nome, Inv.Localizacao as Localizacao, ISNULL(Inv.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem Inv INNER JOIN Artigo A ON Inv.Artigo = A.Artigo WHERE Inv.StkActual IS NOT NULL AND Inv.StkActual > 0) as ArtigoArmazem ON ArmazemLocalizacoes.Localizacao = ArtigoArmazem.Localizacao"`
     });
 }
 
@@ -105,8 +99,7 @@ export function itemsOutOfStock(authentication) {
     return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body: JSON.stringify(`SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, ArtigoArmazem.* FROM ArmazemLocalizacoes INNER JOIN (SELECT Inv.Artigo, A.Descricao as Nome, Inv.Localizacao as Localizacao, ISNULL(Inv.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem Inv INNER JOIN Artigo A ON Inv.Artigo = A.Artigo WHERE Inv.StkActual IS NULL OR Inv.StkActual = 0) as ArtigoArmazem ON ArmazemLocalizacoes.Localizacao = ArtigoArmazem.Localizacao`
-        )
+        body: `"SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, ArtigoArmazem.* FROM ArmazemLocalizacoes INNER JOIN (SELECT Inv.Artigo, A.Descricao as Nome, Inv.Localizacao as Localizacao, ISNULL(Inv.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem Inv INNER JOIN Artigo A ON Inv.Artigo = A.Artigo WHERE Inv.StkActual IS NULL OR Inv.StkActual = 0) as ArtigoArmazem ON ArmazemLocalizacoes.Localizacao = ArtigoArmazem.Localizacao"`
     });
 }
 
@@ -114,8 +107,7 @@ export function itemsToStore(authentication){
     return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body: JSON.stringify(`SELECT Armazem, Artigos.*, ISNULL(V_INV_ArtigoArmazem.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem INNER JOIN (SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigo.Artigo , Artigo.Descricao FROM Artigo INNER JOIN ArmazemLocalizacoes ON ArmazemLocalizacoes.Localizacao = Artigo.LocalizacaoSugestao) AS Artigos ON V_INV_ArtigoArmazem.Artigo=Artigos.Artigo AND V_INV_ArtigoArmazem.Armazem='A2'`
-        )
+        body: `"SELECT Armazem, Artigos.*, ISNULL(V_INV_ArtigoArmazem.StkActual, 0) AS StkActual FROM V_INV_ArtigoArmazem INNER JOIN (SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigo.Artigo , Artigo.Descricao FROM Artigo INNER JOIN ArmazemLocalizacoes ON ArmazemLocalizacoes.Localizacao = Artigo.LocalizacaoSugestao) AS Artigos ON V_INV_ArtigoArmazem.Artigo=Artigos.Artigo AND V_INV_ArtigoArmazem.Armazem='A2'"`
     });
 }
 
@@ -123,8 +115,7 @@ export function getItem(authentication, item, warehouse){
     return fetch(`${PRIMAVERA_URL}/Administrador/Consulta`, {
         method: 'POST',
         headers: makeHeaders(authentication),
-        body: JSON.stringify(`SELECT Armazem, Artigos.*, ISNULL(V_INV_ArtigoArmazem.StkActual, 0) AS StkActual, (PesoUnit * StkActual) as PesoTotal, (VolumeUnit * StkActual) as VolumeTotal FROM V_INV_ArtigoArmazem INNER JOIN (SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigo.Artigo , Artigo.Descricao, ArmazemLocalizacoes.Localizacao, Artigo.Peso as PesoUnit, Artigo.Volume as VolumeUnit FROM Artigo INNER JOIN ArmazemLocalizacoes ON ArmazemLocalizacoes.Localizacao = Artigo.LocalizacaoSugestao) AS Artigos ON V_INV_ArtigoArmazem.Artigo=Artigos.Artigo AND V_INV_ArtigoArmazem.Armazem='${warehouse}' AND Artigos.Artigo='${item}'`
-        )
+        body: `"SELECT Armazem, Artigos.*, ISNULL(V_INV_ArtigoArmazem.StkActual, 0) AS StkActual, (PesoUnit * StkActual) as PesoTotal, (VolumeUnit * StkActual) as VolumeTotal FROM V_INV_ArtigoArmazem INNER JOIN (SELECT ArmazemLocalizacoes.Descricao as DescricaoLocalizacao, Artigo.Artigo , Artigo.Descricao, ArmazemLocalizacoes.Localizacao, Artigo.Peso as PesoUnit, Artigo.Volume as VolumeUnit FROM Artigo INNER JOIN ArmazemLocalizacoes ON ArmazemLocalizacoes.Localizacao = Artigo.LocalizacaoSugestao) AS Artigos ON V_INV_ArtigoArmazem.Artigo=Artigos.Artigo AND V_INV_ArtigoArmazem.Armazem='${warehouse}' AND Artigos.Artigo='${item}'"`
     });
 }
 
