@@ -2,17 +2,18 @@ import React, { Component } from 'react';
 import {
     Container,
     Row,
-    Button
+    Button,
+    Col
 } from 'reactstrap';
 import SearchableTable from "./SearchableTable";
 import Cookies from 'universal-cookie';
 import NavBar from "../NavBar";
-import { getPickingWave, getUrlVars,putFinishedPickingList,clientOrderInfoContent,createGR } from "../utils";
+import { getPickingWave, getUrlVars, putFinishedPickingList, clientOrderInfoContent, createGR } from "../utils";
 
 export default class PickingList extends Component {
     constructor(props) {
         super(props);
-        this.ordersIDs=[];
+        this.ordersIDs = [];
         this.state = {
             title: "",
             tableHeaders: [{ name: "Order ID" }, { name: "Product Code" }, { name: "Product Name" }, { name: "Location" }, { name: "Quantity" }],
@@ -23,7 +24,7 @@ export default class PickingList extends Component {
                 print: false
             },
             updated: false,
-            loading:false
+            loading: false
         };
 
         this.finishedPicking = this.finishedPicking.bind(this);
@@ -67,15 +68,15 @@ export default class PickingList extends Component {
         }
     }
 
-    setStateTableData(waves){
+    setStateTableData(waves) {
         let pickingWaves = [];
         for (const wave of waves) {
             let row = [];
-            for(const item of wave){
-                if(!this.ordersIDs.includes(item.order)){
+            for (const item of wave) {
+                if (!this.ordersIDs.includes(item.order)) {
                     this.ordersIDs.push(item.order);
                 }
-                row.push([ item.order ,item.Artigo, item.Descricao, item.DescricaoLocalizacao , item.Quantidade]);
+                row.push([item.order, item.Artigo, item.Descricao, item.DescricaoLocalizacao, item.Quantidade]);
             }
             pickingWaves.push(row);
         }
@@ -84,10 +85,10 @@ export default class PickingList extends Component {
         })
     }
 
-    showTables(){
+    showTables() {
         let children = [];
         let i = 1;
-        for(const table of this.state.tablesData){
+        for (const table of this.state.tablesData) {
             children.push(<h4>Wave {i}</h4>)
             children.push(<SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={table}></SearchableTable>);
             i++;
@@ -95,14 +96,14 @@ export default class PickingList extends Component {
         return children;
     }
 
-    showLoadingOrButton(){
-        if(this.state.loading)
+    showLoadingOrButton() {
+        if (this.state.loading)
             return <div className="loader">Loading...</div>
         else
-            return  <Button outline color='success' size='lg' className='float-right ml-auto' onClick= {this.finishedPicking}>Complete picking</Button>
+            return <Button outline color='success' size='lg' className='float-right ml-auto' onClick={this.finishedPicking}>Complete picking</Button>
     }
 
-    async finishedPicking(){
+    async finishedPicking() {
 
         this.setState({
             loading: true
@@ -119,12 +120,12 @@ export default class PickingList extends Component {
 
         let token = cookies.get('token')
         for (const orderId of this.ordersIDs) {
-            let r = await clientOrderInfoContent(token,orderId[0],orderId.substring(1,orderId.length));
+            let r = await clientOrderInfoContent(token, orderId[0], orderId.substring(1, orderId.length));
             r = await r.json();
             let entity = r.DataSet.Table[0].Entidade;
-            r = await createGR(token,orderId[0],orderId.substring(1,orderId.length),entity);         
+            r = await createGR(token, orderId[0], orderId.substring(1, orderId.length), entity);
         }
-        
+
         this.setState({
             loading: false
         })
@@ -132,11 +133,17 @@ export default class PickingList extends Component {
         window.location.href = '/unfinished-lists';
     }
 
+    printHandler() {
+        window.print();
+    }
     render() {
         let id = getUrlVars()['id'];
         return (<Container>
             <NavBar />
             <h1>Picking List - {id} </h1>
+            <Col xs='1' className='ml-auto mr-2'>
+                <Button onClick={this.printHandler}><i className="fas fa-print"></i> Print</Button>
+            </Col>
             {this.showTables()}
             <Row>
                 {this.showLoadingOrButton()}

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
     Container,
     Row,
-    Button
+    Button,
+    Col
 } from 'reactstrap';
 import SearchableTable from "./SearchableTable";
 import Cookies from 'universal-cookie';
@@ -19,20 +20,20 @@ export default class ReplenishmentList extends Component {
             tablesData: [[[]]],
             options: {
                 link: false,
-                search:false,
-                print:false
+                search: false,
+                print: false
             },
             updated: false,
-            loading:false
+            loading: false
         };
 
         this.finishedReplenishment = this.finishedReplenishment.bind(this);
     }
 
-    async componentDidMount(){
+    async componentDidMount() {
         const cookies = new Cookies();
 
-        if(!cookies.get('token')){
+        if (!cookies.get('token')) {
             window.location.href = '/login';
         }
 
@@ -50,7 +51,7 @@ export default class ReplenishmentList extends Component {
     async componentDidUpdate() {
         const cookies = new Cookies();
 
-        if(!cookies.get('token')){
+        if (!cookies.get('token')) {
             window.location.href = '/login';
         }
 
@@ -65,12 +66,12 @@ export default class ReplenishmentList extends Component {
         }
     }
 
-    setStateTableData(waves){
+    setStateTableData(waves) {
         let replenishmentWaves = [];
         for (const wave of waves) {
             let row = [];
-            for(const item of wave){
-                row.push([ item.Artigo, item.Descricao, item.DescricaoLocalizacao , item.StkActual]);
+            for (const item of wave) {
+                row.push([item.Artigo, item.Descricao, item.DescricaoLocalizacao, item.StkActual]);
             }
             replenishmentWaves.push(row);
         }
@@ -79,10 +80,10 @@ export default class ReplenishmentList extends Component {
         })
     }
 
-    showTables(){
+    showTables() {
         let children = [];
         let i = 1;
-        for(const table of this.state.tablesData){
+        for (const table of this.state.tablesData) {
             children.push(<h4>Wave {i}</h4>)
             children.push(<SearchableTable options={this.state.options} title={this.state.title} headers={this.state.tableHeaders} data={table}></SearchableTable>);
             i++;
@@ -90,11 +91,11 @@ export default class ReplenishmentList extends Component {
         return children;
     }
 
-    showLoadingOrButton(){
-        if(this.state.loading)
+    showLoadingOrButton() {
+        if (this.state.loading)
             return <div className="loader">Loading...</div>
         else
-            return  <Button outline color='success' size='lg' className='float-right ml-auto' onClick= {this.finishedReplenishment}>Complete replenishment</Button>
+            return <Button outline color='success' size='lg' className='float-right ml-auto' onClick={this.finishedReplenishment}>Complete replenishment</Button>
     }
 
     async finishedReplenishment() {
@@ -102,9 +103,9 @@ export default class ReplenishmentList extends Component {
         this.setState({
             loading: true
         })
-        
+
         let id = getUrlVars()['id'];
-        
+
         //pedido a nossa api para meter a replenishment list finished
         await putFinishedReplenishmentList(id);
         const cookies = new Cookies();
@@ -113,11 +114,11 @@ export default class ReplenishmentList extends Component {
 
         let items = [];
         let tables = this.state.tablesData;
-        for(let i = 0; i < tables.length; i++) {
-            for(let j = 0; j < tables[i].length; j++) {
+        for (let i = 0; i < tables.length; i++) {
+            for (let j = 0; j < tables[i].length; j++) {
                 let row = tables[i][j];
 
-                let location = await getItemLocation(token,row[0]);
+                let location = await getItemLocation(token, row[0]);
                 location = await location.json();
                 location = await location.DataSet.Table[0].Localizacao;
 
@@ -131,7 +132,7 @@ export default class ReplenishmentList extends Component {
 
         let r = await transferWarehouse(token, items);
         await r.json();
-        
+
         this.setState({
             loading: false
         })
@@ -139,11 +140,18 @@ export default class ReplenishmentList extends Component {
         window.location.href = '/unfinished-lists';
     }
 
+    printHandler() {
+        window.print();
+    }
+
     render() {
         let id = getUrlVars()['id'];
         return (<Container>
             <NavBar />
             <h1>Replenishment List - {id} </h1>
+            <Col xs='1' className='ml-auto mr-2'>
+                <Button onClick={this.printHandler}><i className="fas fa-print"></i> Print</Button>
+            </Col>
             {this.showTables()}
             <Row>
                 {this.showLoadingOrButton()}
