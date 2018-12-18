@@ -41,10 +41,10 @@ export default class PickingList extends Component {
             let id = getUrlVars()['id'];
             let r = await getPickingWave(id);
             r = await r.json();
-            this.setStateTableData(r.waves);
             this.setState({
                 updated: true
             })
+            this.setStateTableData(r.waves);
         }
     }
 
@@ -68,7 +68,7 @@ export default class PickingList extends Component {
         for (const wave of waves) {
             let row = [];
             for(const item of wave){
-                row.push([ 1,item.Artigo, item.Descricao, item.DescricaoLocalizacao , item.Quantidade]);
+                row.push([ item.order ,item.Artigo, item.Descricao, item.DescricaoLocalizacao , item.Quantidade]);
             }
             pickingWaves.push(row);
         }
@@ -87,7 +87,7 @@ export default class PickingList extends Component {
 
     showLoadingOrButton(){
         if(this.state.loading)
-            return <div class="loader">Loading...</div>
+            return <div className="loader">Loading...</div>
         else
             return  <Button outline color='success' size='lg' className='float-right ml-auto' onClick= {this.finishedPicking}>Complete picking</Button>
     }

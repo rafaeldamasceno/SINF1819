@@ -27,7 +27,7 @@ app.post('/picking-wave', (req, res) => {
 	results.timestamp = new Date().toLocaleString()
 	results.finished = false
 	results.waves = warehouse.createWaves(req.body)
-	db.get('pickingWaves').push({ id: results.id, timestamp: results.timestamp, finished: false, waves: results.waves }).write()
+	db.get('pickingWaves').push(results).write()
 	db.update('pickingCount', n => n + 1).write()
 	res.send(results)
 })
@@ -40,34 +40,17 @@ app.post('/resupply-wave', (req, res) => {
 })
 
 app.get('/picking-wave', (req, res) => {
-	let results = []
-	if(db.get('pickingCount').value() === 0) {
-		res.send(results)
-		return
-	}
-
 	let pickingWaves = db.get('pickingWaves').value()
-	pickingWaves.forEach(wave => {
-		if(!wave.finished) {
-			results.push(wave);
-		}
-	});
-	res.send(results)
+	res.send(pickingWaves)
+})
+
+app.get('/picking-wave/unfinished', (req, res) => {
+	let pickingWaves = db.get('pickingWaves').filter({ finished: false }).value()
+	res.send(pickingWaves)
 })
 
 app.get('/resupply-wave', (req, res) => {
 	let results = []
-	if(db.get('resupplyCount').value() === 0) {
-		res.send(results)
-		return
-	}
-
-	let resupplyWaves = db.get('resupplyWaves').value()
-	resupplyWaves.forEach(wave => {
-		if(!wave.finished) {
-			results.push(wave);
-		}
-	});
 	res.send(results)
 })
 
@@ -84,12 +67,12 @@ app.get('/resupply-wave/:id', (req, res) => {
 })
 
 app.put('/picking-wave/:id', (req, res) => {
-	db.get('pickingWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true}).write()
+	db.get('pickingWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true }).write()
 	res.send(true)
 })
 
 app.put('/resupply-wave/:id', (req, res) => {
-	db.get('resupplyWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true}).write()
+	db.get('resupplyWaves').find({ id: parseInt(req.params.id) }).assign({ finished: true }).write()
 	res.send(true)
 })
 

@@ -113,7 +113,7 @@ export default class SearchableTableCheckbox extends Component {
 
   showTableOrLoading(){
     if(this.props.options.loading){
-      return <div class="loader">Loading...</div>
+      return <div className="loader">Loading...</div>
     }else{
       return <Table striped>
         <thead>

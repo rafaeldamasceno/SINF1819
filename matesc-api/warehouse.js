@@ -192,49 +192,60 @@ function getSimpleLocation(location) {
 }
 
 function splitItems(items, maxWeight, maxVolume, maxLocations) {
-	let splitItems = []
+	let split = []
 	let currWeight = 0
 	let currVolume = 0
 	let currLocations = []
 	let currWave = []
 
-	for (let i = 0; i < items.length; i++) {
-		if (currWeight + items[i].PesoTotal > maxWeight || currVolume + items[i].VolumeTotal > maxVolume || currLocations.length == maxLocations) {
-			splitItems.push({ items: currWave, locations: currLocations })
+	items.forEach(item => {
+		if (currWeight + item.PesoTotal > maxWeight || currVolume + item.VolumeTotal > maxVolume || currLocations.length == maxLocations) {
+			split.push({ items: currWave, locations: currLocations })
 			currWeight = 0
 			currVolume = 0
 			currWave = []
 			currLocations = []
 		}
-		currWave.push(items[i])
-		currWeight += items[i].PesoTotal
-		currVolume += items[i].VolumeTotal
-		let location = getSimpleLocation(items[i].Localizacao)
+		currWave.push(item)
+		currWeight += item.PesoTotal
+		currVolume += item.VolumeTotal
+		let location = getSimpleLocation(item.Localizacao)
 		if (!currLocations.includes(location)) {
 			currLocations.push(location)
 		}
-	}
-	splitItems.push({ items: currWave, locations: currLocations })
+	})
+			
+	split.push({ items: currWave, locations: currLocations })
 
-	return splitItems
+	return split
 }
 
-function createWaves(items) {
-	let waves = []
-	let split = splitItems([].concat.apply([], items), 150, 0.1, 10)
-	for (let i = 0; i < split.length; i++) {
-		let path = getPath(split[i].locations)
-		let wave = []
-		for (let k = 0; k < path.length; k++) {
-			for (let j = 0; j < split[i].items.length; j++) {
-				if (path[k] == getSimpleLocation(split[i].items[j].Localizacao)) {
-					wave.push(split[i].items[j])
-				}
-			}
-		}
+function flattenAndAddOrderId(orders) {
+	let items = []
+	orders.forEach(order => {
+		order.items.forEach(item => {
+			items.push(Object.assign({ order: order.id }, item))
+		})
+	})
+	return items
+}
 
-		waves.push(wave)
-	}
+function createWaves(orders) {
+	let waves = []
+	let split = splitItems(flattenAndAddOrderId(orders), 150, 0.1, 10)
+
+	split.forEach(element => {
+		let path = getPath(element.locations)
+		let wave = []
+		path.forEach(location => {
+			element.items.forEach(item => {
+				if(getSimpleLocation(item.Localizacao) == location) {
+					wave.push(item)
+				}
+			})
+		})
+		waves.push(wave)	
+	})
 
 	return waves
 }
