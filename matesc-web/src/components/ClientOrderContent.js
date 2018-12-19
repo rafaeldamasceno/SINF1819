@@ -132,6 +132,10 @@ export default class ClientOrderContent extends Component {
         })
     }
 
+    printHandler() {
+        window.print();
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -143,7 +147,7 @@ export default class ClientOrderContent extends Component {
                             <h1>Client order info</h1>
                         </Col>
                         <Col xs='1' className='ml-auto mr-2'>
-                            <Button><i className="fas fa-print"></i> Print</Button>
+                            <Button onClick={this.printHandler}><i className="fas fa-print"></i> Print</Button>
                         </Col>
                     </Row>
                     <div className='order-info'>
