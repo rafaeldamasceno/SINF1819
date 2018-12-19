@@ -62,7 +62,8 @@ export default class Login extends Component {
         return (<Container className="Login">
             <div className="wrapper">
                 <Form className="form-signin" onSubmit={this.validateInput}>
-                    <h3 className="form-signin-heading">Welcome Back! Please Sign In</h3>
+                    <h1 className="form-signin-heading">MATESC</h1>
+                    <h5 className="form-signin-heading">Welcome Back! Please Sign In</h5>
                     <hr className="colorgraph"></hr>
 
                     <input className="form-control"
